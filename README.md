@@ -19,13 +19,13 @@ powershell -File "..\serve-visualsbyfiets.ps1"   # → http://localhost:4196
 | `about.html` | Story, stats, toolkit |
 | `contact.html` | Socials + brief form (opens prefilled email) |
 
-## ⚡ Connect Stripe (do this before launch)
+## ⚡ Stripe
 
-1. Stripe Dashboard → **Payment Links** → *New* — create one link per product
-   (Standard Edit €120, Signature Edit €175, 3D Logo €249, Brand Bundle €399, Project Files €49, Preset Pack €29).
-   For digital products, attach the file delivery via Stripe's post-purchase email or a service like Lemon Squeezy alternative flows.
-2. Paste each `https://buy.stripe.com/...` URL into **`js/store.js`** → `STRIPE_LINKS`.
-3. Until a link is filled in, the buy button falls back to a prefilled order email, so nothing breaks.
+**Connected** — all six Payment Links are live in `js/store.js` → `STRIPE_LINKS`
+(Standard Edit €120, Signature Edit €175, 3D Logo €249, Brand Bundle €399, Project Files €49, Preset Pack €29).
+To change a price: create a new Payment Link in the Stripe dashboard and replace the URL there.
+For the digital products, attach file delivery via the Payment Link's post-purchase confirmation email.
+If a link is ever emptied, its buy button falls back to a prefilled order email, so nothing breaks.
 
 Also in `js/store.js`: set `ORDER_EMAIL` to your real email (currently `bookings@visualsbyfiets.com`).
 

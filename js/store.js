@@ -6,12 +6,12 @@
    email/DM order flow so you never lose a sale.
    ============================================================ */
 const STRIPE_LINKS = {
-  "standard-edit":  "",   // €120
-  "signature-edit": "",   // €175
-  "logo-3d":        "",   // €249
-  "brand-bundle":   "",   // €399
-  "project-files":  "",   // €49
-  "preset-pack":    ""    // €29
+  "standard-edit":  "https://buy.stripe.com/5kQbJ03Gvcon1mz4bu2VG02",   // €120
+  "signature-edit": "https://buy.stripe.com/5kQ5kC1ynfAz6GT5fy2VG03",   // €175
+  "logo-3d":        "https://buy.stripe.com/7sYaEWdh5ewvaX90Zi2VG04",   // €249
+  "brand-bundle":   "https://buy.stripe.com/5kQ00ifpd9cb2qD7nG2VG05",   // €399
+  "project-files":  "https://buy.stripe.com/cNi8wO5ODbkjc1dgYg2VG06",   // €49
+  "preset-pack":    "https://buy.stripe.com/cNibJ0b8X2NN1mz8rK2VG07"    // €29
 };
 
 const ORDER_EMAIL = "bookings@visualsbyfiets.com";
