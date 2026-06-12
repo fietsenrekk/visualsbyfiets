@@ -18,8 +18,10 @@ function buyProduct(id) {
   if (link && link.startsWith("https://buy.stripe.com")) {
     // same-tab redirect: immune to popup blockers, standard checkout UX
     window.location.href = link;
-    // embedded contexts can block same-tab external navigation — fall back to a new tab
-    setTimeout(() => { window.open(link, "_blank", "noopener"); }, 700);
+    // iframes (embedded previews) block same-tab external navigation — open a tab instead
+    if (window.self !== window.top) {
+      setTimeout(() => { window.open(link, "_blank", "noopener"); }, 500);
+    }
   } else {
     // no link configured for this product — route to contact instead
     window.location.href = "contact.html";
