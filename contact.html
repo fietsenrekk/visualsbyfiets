@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Visuals by Fiets | Book an Edit or 3D Logo</title>
+  <meta name="description" content="Brief Visuals by Fiets on your project. DM on Instagram or TikTok, or send the brief by email.">
+  <link rel="icon" type="image/png" href="assets/img/logo-white.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="cursor"><span class="cursor-label">PLAY</span></div>
+
+  <header class="nav">
+    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets — home">
+      <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+    </a>
+    <ul class="nav__links">
+      <li><a href="work.html">Work</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="is-current">Contact</a></li>
+    </ul>
+    <a class="btn btn--solid" href="shop.html">Book an edit</a>
+    <button class="nav__burger" aria-label="Menu"><span></span><span></span></button>
+  </header>
+
+  <section class="page-hero">
+    <h1 class="page-hero__title hero__title">
+      <span class="line"><span>Say</span></span>
+      <span class="line"><span class="accent">Less.</span></span>
+    </h1>
+    <p class="page-hero__sub">Fastest route: DM on Instagram. Prefer email? Use the form — it opens a pre-filled message in your mail app.</p>
+  </section>
+
+  <section class="section section--tight">
+    <div class="split">
+      <div class="reveal">
+        <ul class="contact-list">
+          <li><a href="https://www.instagram.com/visualsbyfiets" target="_blank" rel="noopener"><span>Instagram</span><span>@visualsbyfiets ↗</span></a></li>
+          <li><a href="https://www.tiktok.com/@visualsbyfiets" target="_blank" rel="noopener"><span>TikTok</span><span>@visualsbyfiets ↗</span></a></li>
+          <li><a href="mailto:bookings@visualsbyfiets.com"><span>Email</span><span>bookings@visualsbyfiets.com</span></a></li>
+        </ul>
+        <p style="margin-top:28px;color:var(--ink-dim);font-size:14px;">
+          Response time: usually within 24 hours.<br>
+          Already know what you want? <a href="shop.html" style="color:var(--accent);">Skip the talk — book directly.</a>
+        </p>
+      </div>
+      <form class="form reveal" id="contact-form">
+        <label>Your name
+          <input type="text" name="name" required placeholder="Artist / brand name">
+        </label>
+        <label>What do you need?
+          <select name="service">
+            <option>Signature Edit — €175</option>
+            <option>Standard Edit — €120</option>
+            <option>3D Logo Animation — €249</option>
+            <option>Brand Bundle — €399</option>
+            <option>Project Files — €49</option>
+            <option>Something else</option>
+          </select>
+        </label>
+        <label>Deadline
+          <input type="text" name="deadline" placeholder="e.g. release day, 2 weeks, flexible">
+        </label>
+        <label>Project details
+          <textarea name="details" required placeholder="Song, footage you have, references you like, the vibe you're going for…"></textarea>
+        </label>
+        <button class="btn btn--solid btn--lg" type="submit">Send the brief</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+        <p class="footer__tag">VFX artist & video editor. Edits, 3D logo animation and motion design that convert attention into fans.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Site</h4>
+          <ul>
+            <li><a href="work.html">Work</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Social</h4>
+          <ul>
+            <li><a href="https://www.tiktok.com/@visualsbyfiets" target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href="https://www.instagram.com/visualsbyfiets" target="_blank" rel="noopener">Instagram</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Order</h4>
+          <ul>
+            <li><a href="shop.html">Signature Edit — €175</a></li>
+            <li><a href="shop.html#logo-3d">3D Logo — €249</a></li>
+            <li><a href="shop.html#files">Project Files — €49</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year></span> Visuals by Fiets — visualsbyfiets.com</span>
+      <span>Secure checkout by Stripe</span>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById("contact-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      const subject = encodeURIComponent(`Brief: ${f.get("service")} — ${f.get("name")}`);
+      const body = encodeURIComponent(
+        `Name: ${f.get("name")}\nService: ${f.get("service")}\nDeadline: ${f.get("deadline")}\n\nDetails:\n${f.get("details")}`
+      );
+      window.location.href = `mailto:bookings@visualsbyfiets.com?subject=${subject}&body=${body}`;
+    });
+  </script>
+</body>
+</html>

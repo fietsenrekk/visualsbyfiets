@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visuals by Fiets — VFX Artist & Video Editor | Edits, 3D Logo Animation</title>
+  <meta name="description" content="High-impact video edits, VFX and 3D logo animations for artists and brands. Signature edits from €175. Project files and presets available.">
+  <meta property="og:title" content="Visuals by Fiets — VFX & Motion">
+  <meta property="og:description" content="Viral-grade edits, 3D logo animation & motion design.">
+  <meta property="og:image" content="assets/img/posters/vbf-intro.jpg">
+  <link rel="icon" type="image/png" href="assets/img/logo-white.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="cursor"><span class="cursor-label">PLAY</span></div>
+
+  <div class="preloader">
+    <img class="preloader__logo" src="assets/img/logo-white.png" alt="Visuals by Fiets">
+    <div class="preloader__count">0</div>
+    <div class="preloader__bar"><i></i></div>
+  </div>
+
+  <header class="nav">
+    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets — home">
+      <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+    </a>
+    <ul class="nav__links">
+      <li><a href="work.html">Work</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a class="btn btn--solid" href="shop.html">Book an edit</a>
+    <button class="nav__burger" aria-label="Menu"><span></span><span></span></button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero__content">
+      <p class="hero__kicker">VFX Artist · Video Editor · 3D Motion</p>
+      <h1 class="hero__title">
+        <span class="line"><span class="outline">High-impact</span></span>
+        <span class="line"><span>Visuals</span></span>
+        <span class="line"><span class="accent">By Fiets</span></span>
+      </h1>
+      <p class="hero__sub">Viral-grade edits, 3D logo animations and motion design for artists, creators and brands. Built to stop the scroll — engineered to convert.</p>
+      <div class="hero__cta">
+        <a class="btn btn--solid btn--lg" href="shop.html">Start a project</a>
+        <a class="btn btn--lg" href="work.html">Watch the work</a>
+      </div>
+    </div>
+    <div class="hero__meta">
+      <span>Based in NL — working worldwide</span>
+      <span class="hero__scroll">Scroll <i></i></span>
+      <span>@visualsbyfiets</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Video Edits</span><span>VFX</span><span>3D Logo Animation</span><span>Motion Design</span><span>Project Files</span><span>Sound Design</span>
+    </div>
+  </div>
+
+  <!-- SELECTED WORK -->
+  <section class="section">
+    <div class="section__head">
+      <div>
+        <span class="section__num">01 — Selected work</span>
+        <h2 class="section__title reveal">Made to go <span class="accent">viral</span></h2>
+      </div>
+      <a class="btn" href="work.html">All work →</a>
+    </div>
+    <div class="work-grid" id="featured-grid"></div>
+  </section>
+
+  <!-- SHOWREEL -->
+  <section class="section section--tight">
+    <div class="showreel">
+      <div class="showreel__phone reveal">
+        <video src="assets/video/work/vbf-intro.mp4" poster="assets/img/posters/vbf-intro.jpg" muted loop playsinline preload="metadata"></video>
+        <button class="showreel__sound" aria-label="Toggle sound">&#128263;</button>
+      </div>
+      <div class="showreel__copy reveal">
+        <span class="section__num">02 — The standard</span>
+        <h3>Every frame earns its place</h3>
+        <p>Punch-ins on the beat. VFX that serve the song. Typography that hits like a chorus. This is short-form built for the feed — TikTok, Reels and Shorts native, delivered ready to post.</p>
+        <a class="btn" href="shop.html">Get yours — from €120</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D BRANDS REEL -->
+  <section class="section section--tight" style="padding-left:0;padding-right:0;">
+    <div class="section__head" style="padding:0 clamp(20px,4vw,48px);">
+      <div>
+        <span class="section__num">03 — 3D logo animation</span>
+        <h2 class="section__title reveal">Your logo, <span class="outline">in motion</span></h2>
+      </div>
+      <p class="section__lede reveal">Custom 3D builds of any brand mark — modeled, lit and animated. Supreme, Bape, Chrome Hearts, AP… yours next. From €249.</p>
+    </div>
+    <div class="reel">
+      <div class="reel__track" id="brand-reel"></div>
+    </div>
+    <div style="text-align:center;">
+      <a class="btn btn--solid btn--lg" href="shop.html#logo-3d">Order a 3D logo</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section section--tight">
+    <div class="stats reveal">
+      <div class="stat">
+        <div class="stat__num"><span data-count="150" data-suffix="+">0</span></div>
+        <div class="stat__label">Edits delivered</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num"><em><span data-count="10" data-suffix="M+">0</span></em></div>
+        <div class="stat__label">Combined views</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num"><span data-count="30" data-suffix="+">0</span></div>
+        <div class="stat__label">Artists & brands</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num"><em>48H</em></div>
+        <div class="stat__label">Avg. first cut</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING TEASER -->
+  <section class="section">
+    <div class="section__head">
+      <div>
+        <span class="section__num">04 — Services</span>
+        <h2 class="section__title reveal">Pick your <span class="accent">weapon</span></h2>
+      </div>
+      <p class="section__lede reveal">Flat pricing, no surprises. Pay securely with Stripe — card, iDEAL, Apple Pay.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <span class="price-card__type">Most popular for creators</span>
+        <h3 class="price-card__name">Standard Edit</h3>
+        <div class="price-card__price">€120</div>
+        <ul class="price-card__list">
+          <li>Up to 20s short-form edit</li>
+          <li>Beat-synced cuts & captions</li>
+          <li>1 revision round</li>
+          <li>Delivered in 3–5 days</li>
+        </ul>
+        <button class="btn" data-buy="standard-edit">Order now</button>
+      </div>
+      <div class="price-card price-card--featured reveal">
+        <span class="price-card__flag">Best value</span>
+        <span class="price-card__type">The signature look</span>
+        <h3 class="price-card__name">Signature Edit</h3>
+        <div class="price-card__price">€175</div>
+        <ul class="price-card__list">
+          <li>Up to 60s, full VFX treatment</li>
+          <li>Sound design & typography</li>
+          <li>3 revision rounds</li>
+          <li>Priority delivery in 2–4 days</li>
+        </ul>
+        <button class="btn btn--solid" data-buy="signature-edit">Order now</button>
+      </div>
+      <div class="price-card reveal">
+        <span class="price-card__type">For brands & artists</span>
+        <h3 class="price-card__name">3D Logo Animation</h3>
+        <div class="price-card__price">€249</div>
+        <ul class="price-card__list">
+          <li>Custom 3D model of your mark</li>
+          <li>Cinematic lighting & materials</li>
+          <li>Loop + intro versions</li>
+          <li>4K render, alpha available</li>
+        </ul>
+        <button class="btn" data-buy="logo-3d">Order now</button>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:28px;color:var(--ink-dim);text-align:center;">
+      Want it all? The <a href="shop.html" style="color:var(--accent);">Brand Bundle</a> packs a Signature Edit + 3D logo + project files for <strong style="color:var(--ink);">€399</strong>.
+    </p>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section section--tight">
+    <div class="section__head">
+      <div>
+        <span class="section__num">05 — Process</span>
+        <h2 class="section__title reveal">Zero friction</h2>
+      </div>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <span class="step__num">/01</span>
+        <h3 class="step__title">Brief</h3>
+        <p>Send your footage, song and references. DM or checkout directly — your slot is locked the moment you pay.</p>
+      </div>
+      <div class="step">
+        <span class="step__num">/02</span>
+        <h3 class="step__title">First cut</h3>
+        <p>You get a first cut fast — usually within 48 hours — so we iterate while the idea is hot.</p>
+      </div>
+      <div class="step">
+        <span class="step__num">/03</span>
+        <h3 class="step__title">Refine</h3>
+        <p>Timestamped feedback, surgical fixes. Revisions included in every package.</p>
+      </div>
+      <div class="step">
+        <span class="step__num">/04</span>
+        <h3 class="step__title">Deliver</h3>
+        <p>Final master in 4K + platform-ready exports. Project files available if you want to own the pipeline.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="cta__glow"></div>
+    <h2 class="cta__title reveal"><span class="outline">Ready when</span><br>you are</h2>
+    <p class="reveal">Slots are limited each month — first come, first served.</p>
+    <div class="reveal" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn btn--solid btn--lg" href="shop.html">Book your slot</a>
+      <a class="btn btn--lg" href="https://www.instagram.com/visualsbyfiets" target="_blank" rel="noopener">DM on Instagram</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+        <p class="footer__tag">VFX artist & video editor. Edits, 3D logo animation and motion design that convert attention into fans.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Site</h4>
+          <ul>
+            <li><a href="work.html">Work</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Social</h4>
+          <ul>
+            <li><a href="https://www.tiktok.com/@visualsbyfiets" target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href="https://www.instagram.com/visualsbyfiets" target="_blank" rel="noopener">Instagram</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Order</h4>
+          <ul>
+            <li><a href="shop.html">Signature Edit — €175</a></li>
+            <li><a href="shop.html#logo-3d">3D Logo — €249</a></li>
+            <li><a href="shop.html#files">Project Files — €49</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year></span> Visuals by Fiets — visualsbyfiets.com</span>
+      <span>Secure checkout by Stripe</span>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    mountWorkGrid("#featured-grid", WORK.filter(w => w.featured));
+    mountBrandReel("#brand-reel");
+  </script>
+  <script type="importmap">
+    { "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+  <script type="module" src="js/hero3d.js"></script>
+</body>
+</html>

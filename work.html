@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work — Visuals by Fiets | Edits, VFX & 3D Logo Animation</title>
+  <meta name="description" content="Selected video edits, VFX and 3D logo animations by Visuals by Fiets. Hover to preview, click for sound.">
+  <link rel="icon" type="image/png" href="assets/img/logo-white.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="cursor"><span class="cursor-label">PLAY</span></div>
+
+  <header class="nav">
+    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets — home">
+      <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+    </a>
+    <ul class="nav__links">
+      <li><a href="work.html" class="is-current">Work</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a class="btn btn--solid" href="shop.html">Book an edit</a>
+    <button class="nav__burger" aria-label="Menu"><span></span><span></span></button>
+  </header>
+
+  <section class="page-hero">
+    <h1 class="page-hero__title hero__title">
+      <span class="line"><span>The</span></span>
+      <span class="line"><span class="outline">Archive</span></span>
+    </h1>
+    <p class="page-hero__sub">Hover to preview. Click any piece to watch it with sound. Every edit here shipped to the feed — and most of them outperformed the account average.</p>
+  </section>
+
+  <section class="section section--tight">
+    <div class="section__head">
+      <div class="filters">
+        <button class="filter-btn is-active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="edit">Edits</button>
+        <button class="filter-btn" data-filter="3d">3D Logos</button>
+      </div>
+      <a class="btn" href="shop.html">Get one like this →</a>
+    </div>
+    <div class="work-grid" id="work-grid"></div>
+  </section>
+
+  <section class="cta">
+    <div class="cta__glow"></div>
+    <h2 class="cta__title reveal">Your video <span class="outline">next?</span></h2>
+    <p class="reveal">Signature edits from €175 · 3D logos from €249</p>
+    <div class="reveal" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn btn--solid btn--lg" href="shop.html">Start a project</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+        <p class="footer__tag">VFX artist & video editor. Edits, 3D logo animation and motion design that convert attention into fans.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Site</h4>
+          <ul>
+            <li><a href="work.html">Work</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Social</h4>
+          <ul>
+            <li><a href="https://www.tiktok.com/@visualsbyfiets" target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href="https://www.instagram.com/visualsbyfiets" target="_blank" rel="noopener">Instagram</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Order</h4>
+          <ul>
+            <li><a href="shop.html">Signature Edit — €175</a></li>
+            <li><a href="shop.html#logo-3d">3D Logo — €249</a></li>
+            <li><a href="shop.html#files">Project Files — €49</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year></span> Visuals by Fiets — visualsbyfiets.com</span>
+      <span>Secure checkout by Stripe</span>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    mountWorkGrid("#work-grid", WORK);
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const f = btn.getAttribute("data-filter");
+        mountWorkGrid("#work-grid", f === "all" ? WORK : WORK.filter(w => w.cat === f));
+        window.scrollTo({ top: document.querySelector("#work-grid").offsetTop - 160, behavior: "smooth" });
+      });
+    });
+  </script>
+</body>
+</html>
