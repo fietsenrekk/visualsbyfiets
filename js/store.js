@@ -1,9 +1,8 @@
 /* ============================================================
-   STORE CONFIG — paste your Stripe Payment Links below.
-   Stripe Dashboard → Payment Links → New → copy the
+   STORE CONFIG — Stripe Payment Links.
+   Stripe Dashboard → Payment Links → copy the
    https://buy.stripe.com/... URL for each product.
-   While a link is empty, the buy button falls back to an
-   email/DM order flow so you never lose a sale.
+   Buy buttons send the customer straight to Stripe checkout.
    ============================================================ */
 const STRIPE_LINKS = {
   "standard-edit":  "https://buy.stripe.com/5kQbJ03Gvcon1mz4bu2VG02",   // €120
@@ -14,33 +13,17 @@ const STRIPE_LINKS = {
   "preset-pack":    "https://buy.stripe.com/cNibJ0b8X2NN1mz8rK2VG07"    // €29
 };
 
-const ORDER_EMAIL = "bookings@visualsbyfiets.com";
-const IG_URL = "https://www.instagram.com/visualsbyfiets";
-const TIKTOK_URL = "https://www.tiktok.com/@visualsbyfiets";
-
-const PRODUCT_NAMES = {
-  "standard-edit":  "Standard Edit — €120",
-  "signature-edit": "Signature Edit — €175",
-  "logo-3d":        "3D Logo Animation — €249",
-  "brand-bundle":   "Brand Bundle — €399",
-  "project-files":  "Project Files (.prproj) — €49",
-  "preset-pack":    "VBF Preset & Transition Pack — €29"
-};
-
 function buyProduct(id) {
   const link = STRIPE_LINKS[id];
   if (link && link.startsWith("https://buy.stripe.com")) {
-    window.open(link, "_blank", "noopener");
-    return;
+    // same-tab redirect: immune to popup blockers, standard checkout UX
+    window.location.href = link;
+    // embedded contexts can block same-tab external navigation — fall back to a new tab
+    setTimeout(() => { window.open(link, "_blank", "noopener"); }, 700);
+  } else {
+    // no link configured for this product — route to contact instead
+    window.location.href = "contact.html";
   }
-  // Fallback: order by email with a prefilled subject/body
-  const name = PRODUCT_NAMES[id] || id;
-  const subject = encodeURIComponent("Order: " + name);
-  const body = encodeURIComponent(
-    "Hey Fiets,\n\nI want to order: " + name +
-    "\n\nProject details / song / brand:\n\nDeadline:\n\nMy IG/TikTok handle:\n"
-  );
-  window.location.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 document.addEventListener("click", (e) => {
