@@ -29,7 +29,8 @@
     const item = document.createElement("div");
     item.className = "r-workitem";
     item.innerHTML = `
-      <div class="r-worklink" data-id="${w.id}">
+      <div class="r-worklink" data-id="${w.id}" role="button" tabindex="0"
+           aria-label="Play ${client} — ${piece}">
         <div class="r-workvideo-w">
           <img class="r-workvideo" src="assets/img/posters/${w.id}.jpg" alt="${piece}">
           <video class="r-workvideo" data-src="assets/video/work/${w.id}.mp4"
@@ -105,8 +106,16 @@
   listEl.addEventListener("click", (e) => {
     if (state.moved > 6) { e.stopPropagation(); e.preventDefault(); return; }
     const link = e.target.closest(".r-worklink");
-    if (link) openDetail(link.getAttribute("data-id"));
+    if (link) openDetail(link.getAttribute("data-id"), link);
   }, true);
+  /* keyboard: Enter / Space opens a focused card */
+  listEl.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const link = e.target.closest(".r-worklink");
+    if (!link) return;
+    e.preventDefault();
+    openDetail(link.getAttribute("data-id"), link);
+  });
 
   /* ---------- video pool ---------- */
   function attach(it) {
@@ -193,31 +202,52 @@
   const dCreditBtn = detail.querySelector(".r-credit-btn");
   let timerRaf = null;
 
-  function openDetail(id) {
+  /* dialog semantics */
+  detail.setAttribute("role", "dialog");
+  detail.setAttribute("aria-modal", "true");
+  let openToken = 0;        // invalidates in-flight play promises on rapid open/close
+  let lastTrigger = null;   // focus returns here on close
+
+  function openDetail(id, triggerEl) {
     const it = items.find(i => i.data.id === id);
     if (!it) return;
+    const token = ++openToken;
+    lastTrigger = triggerEl || document.activeElement;
     dClient.textContent = it.client;
     dPiece.textContent = it.piece;
+    detail.setAttribute("aria-label", `${it.client} — ${it.piece}`);
     dVideo.src = `assets/video/work/${id}.mp4`;
     dVideo.muted = false;
     dVideo.volume = 1;
     dVideo.currentTime = 0;
     detail.classList.add("is-open");
+    detail.setAttribute("aria-hidden", "false");
+    document.body.classList.add("detail-open");
     detailOpen = true;
     state.locked = true;
     items.forEach(i => i.video.pause());
-    dVideo.play().then(() => { dPlay.textContent = "pause"; }).catch(() => {
+    dVideo.play().then(() => {
+      if (token !== openToken) { dVideo.pause(); return; }
+      dPlay.textContent = "pause";
+    }).catch(() => {
+      if (token !== openToken) return;
       dVideo.muted = true;
       dVideo.play().catch(() => {});
       dPlay.textContent = "pause";
       dMute.textContent = "unmute";
     });
     dMute.textContent = dVideo.muted ? "unmute" : "mute";
+    if (window.VBFluid && !VBFluid.reduced) VBFluid.burst(2, 0.5);
     tick();
+    detail.querySelector(".r-close").focus({ preventScroll: true });
   }
 
   function closeDetail() {
+    if (!detailOpen) return;
+    openToken++;
     detail.classList.remove("is-open");
+    detail.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("detail-open");
     detailOpen = false;
     state.locked = false;
     dVideo.pause();
@@ -225,6 +255,7 @@
     dVideo.load();
     dCredits.classList.remove("is-open");
     cancelAnimationFrame(timerRaf);
+    if (lastTrigger && lastTrigger.isConnected) lastTrigger.focus({ preventScroll: true });
   }
 
   function tick() {
@@ -237,10 +268,11 @@
     timerRaf = requestAnimationFrame(tick);
   }
 
-  dPlay.addEventListener("click", () => {
+  function togglePlay() {
     if (dVideo.paused) { dVideo.play().catch(() => {}); dPlay.textContent = "pause"; }
     else { dVideo.pause(); dPlay.textContent = "play"; }
-  });
+  }
+  dPlay.addEventListener("click", togglePlay);
   dMute.addEventListener("click", () => {
     dVideo.muted = !dVideo.muted;
     dMute.textContent = dVideo.muted ? "unmute" : "mute";
@@ -252,7 +284,39 @@
   });
   dCreditBtn.addEventListener("click", () => dCredits.classList.toggle("is-open"));
   detail.querySelector(".r-close").addEventListener("click", closeDetail);
-  window.addEventListener("keydown", (e) => { if (e.key === "Escape" && detailOpen) closeDetail(); });
+
+  /* outside click: the letterbox bars close, the video itself toggles */
+  detail.addEventListener("click", (e) => {
+    if (e.target === detail) closeDetail();
+    else if (e.target === dVideo) togglePlay();
+  });
+
+  /* keyboard: ESC closes, Space toggles, arrows seek, Tab is trapped */
+  window.addEventListener("keydown", (e) => {
+    if (!detailOpen) return;
+    if (e.key === "Escape") { closeDetail(); return; }
+    if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); togglePlay(); return; }
+    if (e.key === "ArrowRight" && dVideo.duration) { dVideo.currentTime = Math.min(dVideo.duration, dVideo.currentTime + 5); return; }
+    if (e.key === "ArrowLeft" && dVideo.duration) { dVideo.currentTime = Math.max(0, dVideo.currentTime - 5); return; }
+    if (e.key === "Tab") {
+      const focusables = [...detail.querySelectorAll("button, a[href]")]
+        .filter(el => el.offsetParent !== null || el === detail.querySelector(".r-close"));
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* mobile: swipe down to close */
+  let swipeY = null;
+  detail.addEventListener("touchstart", (e) => { swipeY = e.touches[0].clientY; }, { passive: true });
+  detail.addEventListener("touchmove", (e) => {
+    if (swipeY === null) return;
+    if (e.touches[0].clientY - swipeY > 80) { swipeY = null; closeDetail(); }
+  }, { passive: true });
+  detail.addEventListener("touchend", () => { swipeY = null; });
 
   /* ---------- boot ---------- */
   rBuildDots(document.querySelector(".r-dots"));

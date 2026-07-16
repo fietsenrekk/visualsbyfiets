@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>(function(){try{var t=localStorage.getItem("vbf-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Visuals by Fiets — VFX Artist & Video Editor | Edits, 3D Logo Animation</title>
   <meta name="description" content="High-impact video edits, VFX and 3D logo animations for artists and brands. Signature edits from €175. Project files and presets available.">
@@ -15,16 +16,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
   <div class="noise"></div>
-  <div class="cursor"><span class="cursor-label">PLAY</span></div>
+  
 
-  <div class="preloader">
-    <img class="preloader__logo" src="assets/img/logo-white.png" alt="Visuals by Fiets">
-    <div class="preloader__count">0</div>
-    <div class="preloader__bar"><i></i></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="intro-veil" aria-hidden="true">
+    <img class="intro-veil__mark" src="assets/img/logo-white.png" alt="">
+    <div class="intro-veil__word">vfx &amp; motion studio</div>
   </div>
 
   <header class="nav">
@@ -42,7 +44,7 @@
   </header>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="main">
     <div class="hero__content">
       <p class="hero__kicker">VFX Artist · Video Editor · 3D Motion</p>
       <h1 class="hero__title">
@@ -273,12 +275,14 @@
     </div>
   </footer>
 
-  <script src="js/fluid-bg.js?v=2"></script>
+  <script src="js/fluid.js?v=1"></script>
+  <script src="js/theme.js?v=1"></script>
+  <script src="js/cursor.js?v=1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="js/data.js?v=2"></script>
   <script src="js/store.js?v=2"></script>
-  <script src="js/main.js?v=3"></script>
+  <script src="js/main.js?v=4"></script>
   <script>
     mountWorkGrid("#featured-grid", WORK.filter(w => w.featured));
     mountBrandReel("#brand-reel");

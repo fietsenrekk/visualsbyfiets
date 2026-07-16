@@ -58,57 +58,7 @@ button { font-family: inherit; cursor: pointer; }
   100% { transform: translate(2%, -1%); }
 }
 
-/* ---------- custom cursor ---------- */
-.cursor {
-  position: fixed; top: 0; left: 0;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: var(--accent);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-  transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out), opacity 0.25s;
-  opacity: 0;
-}
-.cursor.is-active { opacity: 1; }
-.cursor.is-hover { width: 56px; height: 56px; }
-.cursor.is-media { width: 84px; height: 84px; background: var(--ink); }
-.cursor-label {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-body); font-weight: 700;
-  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--accent-ink); opacity: 0;
-}
-.cursor.is-media .cursor-label { opacity: 1; }
-@media (hover: none) { .cursor { display: none; } }
 
-/* ---------- preloader ---------- */
-.preloader {
-  position: fixed; inset: 0;
-  background: var(--bg);
-  z-index: 10000;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 24px;
-}
-.preloader__logo { width: min(280px, 60vw); opacity: 0.9; }
-.preloader__count {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 4vw, 52px);
-  color: var(--accent);
-  line-height: 1;
-}
-.preloader__bar {
-  width: min(280px, 60vw); height: 2px;
-  background: var(--line);
-  overflow: hidden;
-}
-.preloader__bar i {
-  display: block; height: 100%; width: 0%;
-  background: var(--accent);
-}
 
 /* ---------- nav ---------- */
 .nav {
@@ -728,4 +678,144 @@ button { font-family: inherit; cursor: pointer; }
   .nav .btn { display: none; }
   .work-card, .work-card.is-wide { grid-column: span 12; }
   .stat { border-right: none; border-bottom: 1px solid var(--line); }
+}
+
+/* ============================================================
+   THEME ENGINE — gold (default, brand) / violet (deep black,
+   luxurious purple, lavender accent). data-theme on <html>.
+   ============================================================ */
+:root[data-theme="violet"] {
+  --bg: #050308;
+  --bg-2: #0c0716;
+  --ink: #d9d0f5;
+  --ink-dim: rgba(217, 208, 245, 0.55);
+  --line: rgba(185, 166, 255, 0.18);
+  --accent: #b9a6ff;
+  --accent-ink: #0a0612;
+}
+
+/* cross-fade every color while switching — never flash */
+html.theming body,
+html.theming body *,
+html.theming body *::before,
+html.theming body *::after {
+  transition: background-color 0.9s ease, color 0.9s ease,
+              border-color 0.9s ease, box-shadow 0.9s ease,
+              -webkit-text-stroke-color 0.9s ease !important;
+}
+
+.theme-toggle {
+  width: 30px; height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: none;
+  transition: border-color 0.3s;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+.theme-toggle__dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 50%, transparent 50%);
+  border: 1px solid var(--accent);
+  transition: transform 0.6s var(--ease-out);
+}
+:root[data-theme="violet"] .theme-toggle__dot { transform: rotate(180deg); }
+
+/* ---------- fluid canvas layer ---------- */
+.fluid-bg {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* ---------- refined cursor ---------- */
+body.vbf-cursor-on { cursor: none; }
+body.vbf-cursor-on a,
+body.vbf-cursor-on button,
+body.vbf-cursor-on [role="button"],
+body.vbf-cursor-on input,
+body.vbf-cursor-on select,
+body.vbf-cursor-on textarea { cursor: none; }
+.vbf-cursor-dot {
+  position: fixed; top: 0; left: 0;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.vbf-cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 34px; height: 34px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: width 0.35s var(--ease-out), height 0.35s var(--ease-out),
+              opacity 0.3s, background-color 0.3s, border-color 0.3s;
+}
+body.vbf-cursor-on .vbf-cursor-dot,
+body.vbf-cursor-on .vbf-cursor-ring { opacity: 1; }
+.vbf-cursor-ring.is-down { width: 26px; height: 26px; }
+.vbf-cursor-ring[data-state="hover"] { width: 52px; height: 52px; }
+.vbf-cursor-ring[data-state="play"],
+.vbf-cursor-ring[data-state="drag"],
+.vbf-cursor-ring[data-state="close"] {
+  width: 78px; height: 78px;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.vbf-cursor-label {
+  font-family: var(--font-display);
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+/* ---------- intro veil (homepage entrance) ---------- */
+.intro-veil {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 9998;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px;
+}
+.intro-veil__mark { width: min(230px, 52vw); opacity: 0; }
+.intro-veil__word {
+  font-family: var(--font-display);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--ink-dim);
+  opacity: 0;
+}
+
+/* ---------- accessibility ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.skip-link {
+  position: fixed; top: -48px; left: 16px;
+  z-index: 10001;
+  background: var(--accent); color: var(--accent-ink);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 10px 18px; border-radius: 999px;
+  transition: top 0.3s var(--ease-out);
+}
+.skip-link:focus { top: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .noise { animation: none; }
+  .hero__scroll i { animation: none; }
+  .marquee__track { animation: none !important; }
 }

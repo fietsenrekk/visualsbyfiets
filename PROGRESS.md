@@ -1,5 +1,50 @@
 # Progress log
 
+## 2026-07-16 (5) — award-level elevation pass
+
+**Fluid:** `js/fluid.js` — the real Navier-Stokes simulation (Dobryakov MIT,
+Kabalin background adaptation, provided by the user) replaces the procedural
+shader. Stripped config.json/capture/checkerboard/dither-PNG; palette-locked
+dye (no rainbow); window-level pointer input; scroll → rising turbulence;
+section-enter splats; hover micro-splats on interactive elements; quality
+governor (drops dye res + bloom if avg fps < 45 over the first 2s); pauses
+hidden; reduced-motion = still. Public API `VBFluid.{splat,burst,setPalette,calm}`.
+
+**Theme engine:** `js/theme.js` + CSS vars. gold (brand default) / violet
+(deep black #050308, purple dye, lavender accent #b9a6ff). Pre-paint boot
+script on every page (no flash), `html.theming` cross-fades all colors for
+0.9s (never snaps), fluid re-dyed + soft burst on switch, localStorage,
+toggle injected into both nav styles with aria-pressed.
+
+**Works detail — close-button root cause:** `.r-nav` (z-97, fixed, full-width)
+sat ABOVE `.r-detail` (z-95); the nav's hitbox swallowed every click on the
+close button. Fixed: detail → z-98 and nav+dots fade out while open. Full
+dialog overhaul: role=dialog/aria-modal, focus → close btn on open and back
+to the card on close, focus trap on Tab, ESC / outside-click(letterbox) /
+swipe-down close, click video = play-pause, Space toggles, ←/→ seek 5s,
+rapid open/close guarded by a token that voids stale play() promises,
+cards are tabbable role=button with Enter/Space.
+
+**Cursor:** `js/cursor.js` — dot + trailing ring, context states
+(hover/play/drag/close with Syncopate labels), press feedback, magnetic
+nav links, hidden on touch, instant-follow under reduced motion. Old
+per-page cursor removed.
+
+**Intro:** homepage preloader (fake 0→100 counter) replaced by an intro
+veil — mark + word fade, fluid burst ignites behind, veil dissolves into
+the hero (~1.9s), skipped for repeat visits (sessionStorage) and
+reduced-motion.
+
+**A11y/perf:** skip-link, :focus-visible, reduced-motion kills marquee/
+noise/scroll pulse, DPR capped, sim 128 / dye 1024 (512 + no bloom on
+mobile or weak GPUs). Dead code removed: fluid-bg.js, hero3d refs,
+.preloader and legacy .cursor CSS/JS.
+
+**Verified:** theme click → violet with cross-fade + persistence; fluid
+burst API ok; detail gauntlet all green (close/ESC/outside/rapid/focus/
+aria/keyboard/swipe); arrow-seek + space verified after metadata; all six
+pages 200, zero console errors; no stale references.
+
 ## 2026-07-16 (4) — fluid v2: smooth like the reference
 
 User flagged blocky noise + point-cursor vs risk.film's smooth blobs + lens

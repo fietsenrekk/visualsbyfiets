@@ -3,28 +3,34 @@
    ============================================================ */
 gsap.registerPlugin(ScrollTrigger);
 
-/* ---------- preloader ---------- */
-(function preloader() {
-  const pre = document.querySelector(".preloader");
-  if (!pre) { document.body.classList.add("is-ready"); return; }
-  const count = pre.querySelector(".preloader__count");
-  const bar = pre.querySelector(".preloader__bar i");
-  const state = { p: 0 };
-  gsap.to(state, {
-    p: 100, duration: 1.6, ease: "power2.inOut",
-    onUpdate() {
-      const v = Math.round(state.p);
-      if (count) count.textContent = v;
-      if (bar) bar.style.width = v + "%";
-    },
-    onComplete() {
-      gsap.to(pre, {
-        yPercent: -100, duration: 0.8, ease: "power3.inOut",
-        onComplete() { pre.remove(); document.body.classList.add("is-ready"); }
-      });
-      heroIntro();
-    }
-  });
+/* ---------- intro veil: entering the space, no fake loading ---------- */
+(function introVeil() {
+  const veil = document.querySelector(".intro-veil");
+  if (!veil) { document.body.classList.add("is-ready"); return; }
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const seen = sessionStorage.getItem("vbf-entered");
+  const finish = () => {
+    veil.remove();
+    document.body.classList.add("is-ready");
+    sessionStorage.setItem("vbf-entered", "1");
+  };
+  if (reduced || seen) {
+    gsap.to(veil, { opacity: 0, duration: 0.35, onComplete: finish });
+    heroIntro();
+    return;
+  }
+  const mark = veil.querySelector(".intro-veil__mark");
+  const word = veil.querySelector(".intro-veil__word");
+  const tl = gsap.timeline();
+  tl.to(mark, { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0.15)
+    .fromTo(mark, { scale: 0.92 }, { scale: 1, duration: 0.9, ease: "power3.out" }, 0.15)
+    .to(word, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.55)
+    .add(() => { if (window.VBFluid) VBFluid.burst(6, 1.1); }, 0.95)
+    .to(veil, {
+      opacity: 0, duration: 0.8, ease: "power2.inOut",
+      onComplete: finish
+    }, 1.15)
+    .add(heroIntro, 1.2);
 })();
 
 function heroIntro() {
@@ -39,26 +45,10 @@ function heroIntro() {
     { opacity: 0, y: 24 },
     { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.08, delay: 0.5 });
 }
-// Subpages have no preloader: run intro immediately
-if (!document.querySelector(".preloader")) {
+// Subpages have no intro veil: run the hero intro immediately
+if (!document.querySelector(".intro-veil")) {
   window.addEventListener("DOMContentLoaded", heroIntro);
 }
-
-/* ---------- custom cursor ---------- */
-(function cursor() {
-  const cur = document.querySelector(".cursor");
-  if (!cur || matchMedia("(hover: none)").matches) return;
-  const setX = gsap.quickTo(cur, "x", { duration: 0.18, ease: "power2.out" });
-  const setY = gsap.quickTo(cur, "y", { duration: 0.18, ease: "power2.out" });
-  window.addEventListener("pointermove", (e) => {
-    cur.classList.add("is-active");
-    setX(e.clientX); setY(e.clientY);
-  });
-  document.addEventListener("pointerover", (e) => {
-    cur.classList.toggle("is-hover", !!e.target.closest("a, button"));
-    cur.classList.toggle("is-media", !!e.target.closest(".work-card"));
-  });
-})();
 
 /* ---------- nav ---------- */
 (function nav() {
