@@ -27,7 +27,7 @@ To change a price: create a new Payment Link in the Stripe dashboard and replace
 For the digital products, attach file delivery via the Payment Link's post-purchase confirmation email.
 If a link is ever emptied, its buy button falls back to a prefilled order email, so nothing breaks.
 
-Also in `js/store.js`: set `ORDER_EMAIL` to your real email (currently `bookings@visualsbyfiets.com`).
+Contact email across the site: `charlesmuwangam@gmail.com`.
 
 ## ✏️ Things to personalize
 
