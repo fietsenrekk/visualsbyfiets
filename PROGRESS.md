@@ -1,5 +1,20 @@
 # Progress log
 
+## 2026-07-16 (3) — fluid "puddle" background site-wide
+
+- `js/fluid-bg.js`: dependency-free WebGL fragment shader — double domain-warped
+  fbm (IQ style), palette-locked ribbons (bronze → molten amber → cream #e6d5bb
+  warm side, slate → ice-blue cool side) over dominant black, vignette. Cursor
+  is a spring: movement charges an energy uniform that swirls + heats the warp
+  locally and decays in ~1s. Renders at 0.5× resolution, pauses when hidden,
+  respects prefers-reduced-motion, self-mounts as first body child at z-index 0.
+- Mounted on all six pages; homepage 3D chrome logo removed (hero3d.js deleted,
+  importmap gone) — the hero type now sits directly on the fluid.
+- Verified via `window.__VBF_FLUID.snapshot()` pixel sampling: warm + cool
+  ribbons + black balance across 4 timestamps, hover energy lifts center
+  luminance 1→24, paints on index/work/about, carousel (z90) and manifesto
+  (z3) stack above the fluid (z0), console clean.
+
 ## 2026-07-16 (2) — exact carousel physics + site-wide beige/Syncopate
 
 - Work carousel physics now 1:1 with risk.film's bundle: smoothed-velocity

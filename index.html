@@ -43,7 +43,6 @@
 
   <!-- HERO -->
   <section class="hero">
-    <canvas id="hero-canvas"></canvas>
     <div class="hero__content">
       <p class="hero__kicker">VFX Artist · Video Editor · 3D Motion</p>
       <h1 class="hero__title">
@@ -274,6 +273,7 @@
     </div>
   </footer>
 
+  <script src="js/fluid-bg.js?v=1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="js/data.js?v=2"></script>
@@ -283,12 +283,5 @@
     mountWorkGrid("#featured-grid", WORK.filter(w => w.featured));
     mountBrandReel("#brand-reel");
   </script>
-  <script type="importmap">
-    { "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-    } }
-  </script>
-  <script type="module" src="js/hero3d.js?v=3"></script>
 </body>
 </html>
