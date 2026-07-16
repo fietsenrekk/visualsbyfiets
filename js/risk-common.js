@@ -36,6 +36,13 @@ function rBuildDots(container) {
 function rRunLoader(onDone) {
   const load = document.querySelector(".r-load");
   if (!load) { onDone && onDone(); return; }
+  if (typeof gsap === "undefined") {
+    // CDN failed — never trap the user behind the loader
+    load.remove();
+    document.querySelectorAll(".r-reveal").forEach(el => { el.style.opacity = 1; });
+    onDone && onDone();
+    return;
+  }
   const ticks = load.querySelectorAll(".r-tick");
   const nbr = load.querySelector(".r-load-nbr");
   const state = { p: 0 };

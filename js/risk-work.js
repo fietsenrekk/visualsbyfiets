@@ -22,7 +22,7 @@
     item.innerHTML = `
       <div class="r-worklink" data-id="${w.id}">
         <div class="r-workvideo-w">
-          <img class="r-workvideo" src="assets/img/posters/${w.id}.jpg" alt="${piece}" loading="lazy">
+          <img class="r-workvideo" src="assets/img/posters/${w.id}.jpg" alt="${piece}">
           <video class="r-workvideo" data-src="assets/video/work/${w.id}.mp4"
                  muted loop playsinline preload="none"></video>
         </div>
@@ -132,6 +132,7 @@
   /* ---------- intro ---------- */
   function intro() {
     state.locked = false;
+    if (typeof gsap === "undefined") return;
     gsap.fromTo(".r-worklink",
       { scale: 0.4, opacity: 0 },
       { scale: 1, opacity: 1, duration: 1.1, ease: "power3.out", stagger: 0.05 });

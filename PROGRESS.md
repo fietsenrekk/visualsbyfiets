@@ -38,6 +38,19 @@ opening a work.
   close clears src. About: 2 track copies, wrap math, links/grid present.
 - Loader, dots, nav, labels render (screenshot).
 
+### Review-pass fixes
+- About loop period: was `scrollHeight/2` (934px) → seam; now copy-to-copy
+  `offsetTop` distance (1414px) → verified seamless.
+- Posters: dropped `loading="lazy"` (unreliable inside transformed carousels).
+- `.r-worklist`: `touch-action:none` + own pointer-events so touch drag works.
+- Loader + intro survive a GSAP CDN failure (no-op fallback clears the screen).
+- Re-measure about track on `document.fonts.ready`.
+
+### Verified computed-style audit (both pages)
+- bg rgb(0,0,0), ink rgb(230,213,187), Syncopate, uppercase, fixed centered nav,
+  cards 35vw×22vw, dots beige, overflow hidden, track will-change transform.
+
 ### Notes / limitations
-- Embedded preview pane freezes rAF when backgrounded — visual checks done via
-  screenshots + live site in real Chrome.
+- Embedded preview pane + background tabs freeze rAF (loader waits for
+  visibility) — normal for real foreground users; mechanics verified via
+  scripted checks, layout via screenshots/computed styles.

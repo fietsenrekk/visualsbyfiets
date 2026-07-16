@@ -154,6 +154,8 @@ body.risk-page ::selection { background: var(--r-beige); color: #000; }
   width: 100%;
   height: 22vw;
   cursor: grab;
+  pointer-events: auto;
+  touch-action: none; /* keep pointermove alive for horizontal drag on touch */
 }
 .r-worklist.is-dragging { cursor: grabbing; }
 .r-workitem {

@@ -11,8 +11,11 @@
   const state = { current: 0, target: 0, half: 0, locked: true };
 
   function measure() {
-    // two identical halves → wrap at half the full height
-    state.half = track.scrollHeight / 2;
+    // seamless period = distance between the two identical copies
+    const copies = track.querySelectorAll(".r-p-about");
+    state.half = copies.length > 1
+      ? copies[1].offsetTop - copies[0].offsetTop
+      : track.scrollHeight;
   }
   measure();
   window.addEventListener("resize", measure);
