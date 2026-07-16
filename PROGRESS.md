@@ -1,5 +1,22 @@
 # Progress log
 
+## 2026-07-16 (2) — exact carousel physics + site-wide beige/Syncopate
+
+- Work carousel physics now 1:1 with risk.film's bundle: smoothed-velocity
+  card scaling `max(0.35, 1 - |lspeed|·0.7)`, parallax spread from center
+  (±60% × speed), snap-to-card (0.1 / 0.07 mobile), lerp 0.12/0.1,
+  speedDecay 0.9/frame, wheel `target -= δ·0.0015·itemW`. Intro (0.4→1,
+  staggered) folded into the physics loop so GSAP and layout() never fight.
+- Mobile about fixed: gradient mask fades the looping text near the chrome,
+  container clears the fixed nav, info links wrap, grid fits 390px, no
+  horizontal overflow (all verified at 390×844).
+- Whole site retokened: black `#000` + beige `#e6d5bb`, Syncopate display,
+  Red Hat Display body, every display size recalibrated for Syncopate's
+  width, Three.js hero rim light beige, zero acid-green refs left.
+- All verified locally: physics transforms (scale 0.44 @ speed 0.8, spread
+  offsets), shop Stripe buttons intact, index tokens/fonts/no-overflow,
+  console clean. Versions bumped to v3.
+
 ## 2026-07-16 — risk.film-style Work + About pages
 
 Goal: rebuild /work and /about with the exact UI + scroll mechanism of

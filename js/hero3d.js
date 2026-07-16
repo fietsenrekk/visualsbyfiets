@@ -69,7 +69,7 @@ try {
   const key = new THREE.DirectionalLight(0xffffff, 1.4);
   key.position.set(3, 4, 5);
   scene.add(key);
-  const rim = new THREE.DirectionalLight(0xc8ff00, 0.55);
+  const rim = new THREE.DirectionalLight(0xe6d5bb, 0.7);
   rim.position.set(-4, -2, -3);
   scene.add(rim);
 

@@ -1,7 +1,15 @@
 /* ============================================================
-   WORK — infinite horizontal carousel (risk.film mechanic)
-   Vertical wheel / drag / touch all feed a lerped target;
-   items wrap infinitely, skew with velocity, intro-scale in.
+   WORK — infinite horizontal carousel, physics matched 1:1 to
+   risk.film/works (extracted from their production bundle):
+
+     lspeed  = damp(lspeed, speed, 5, dt)      smoothed velocity
+     scale   = max(0.35, 1 - |lspeed| * 0.7)   cards shrink w/ speed
+     spread  = distFromCenter(items) * |lspeed| * 60% of card width
+     current = damp(current, target, 1/lerpFactor, dt)
+     snap    → nearest card when input is idle (0.1 / 0.07 mobile)
+     wheel   → target -= delta * 0.0015 * itemW ; speed = -delta * .01
+     speed  *= 0.9 each frame
+
    Click a work → full-screen detail panel in the same black/
    beige color panel with a custom play/seek/timer/mute player.
    ============================================================ */
@@ -11,6 +19,7 @@
   if (!listEl || typeof WORK === "undefined") return;
 
   const isMobile = () => matchMedia("(max-width: 767px)").matches;
+  const damp = (a, b, lambda, dt) => a + (b - a) * (1 - Math.exp(-lambda * dt));
 
   /* ---------- build items ---------- */
   const items = WORK.map((w) => {
@@ -32,15 +41,22 @@
         </div>
       </div>`;
     listEl.appendChild(item);
-    return { el: item, video: item.querySelector("video"), data: w, client, piece };
+    return {
+      el: item,
+      link: item.querySelector(".r-worklink"),
+      video: item.querySelector("video"),
+      data: w, client, piece
+    };
   });
 
-  /* ---------- carousel state ---------- */
+  /* ---------- state ---------- */
   const state = {
-    current: 0, target: 0, vel: 0,
+    current: 0, target: 0,
+    speed: 0, lspeed: 0,
     itemW: 0, total: 0, vw: 0,
     dragging: false, dragStartX: 0, dragStartTarget: 0, moved: 0,
-    locked: true // until loader finishes
+    lastInput: 0,
+    locked: true
   };
   let detailOpen = false;
 
@@ -52,10 +68,13 @@
   measure();
   window.addEventListener("resize", measure);
 
-  /* ---------- input ---------- */
+  /* ---------- input (risk mapping) ---------- */
   window.addEventListener("wheel", (e) => {
     if (state.locked) return;
-    state.target -= (e.deltaY + e.deltaX);
+    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    state.target -= d * 0.0015 * state.itemW;
+    state.speed = -d * 0.01;
+    state.lastInput = performance.now();
   }, { passive: true });
 
   listEl.addEventListener("pointerdown", (e) => {
@@ -70,16 +89,16 @@
     if (!state.dragging) return;
     const dx = e.clientX - state.dragStartX;
     state.moved = Math.max(state.moved, Math.abs(dx));
+    const prevTarget = state.target;
     state.target = state.dragStartTarget + dx * 1.6;
+    state.speed = (state.target - prevTarget) * 0.02;
+    state.lastInput = performance.now();
   });
   window.addEventListener("pointerup", () => {
     if (!state.dragging) return;
     state.dragging = false;
     listEl.classList.remove("is-dragging");
-    if (isMobile()) {
-      // snap to nearest card (risk mobile behaviour)
-      state.target = Math.round(state.target / state.itemW) * state.itemW;
-    }
+    state.lastInput = performance.now() - 100; // let snap take over shortly
   });
 
   /* suppress click after a real drag */
@@ -89,27 +108,37 @@
     if (link) openDetail(link.getAttribute("data-id"));
   }, true);
 
-  /* ---------- video pool: only near-viewport cards hold a live video ---------- */
+  /* ---------- video pool ---------- */
   function attach(it) {
-    if (!it.video.getAttribute("src")) {
-      it.video.src = it.video.getAttribute("data-src");
-    }
+    if (!it.video.getAttribute("src")) it.video.src = it.video.getAttribute("data-src");
     if (it.video.paused && !detailOpen && !state.locked) it.video.play().catch(() => {});
   }
   function detach(it) {
     if (it.video.getAttribute("src")) {
       it.video.pause();
       it.video.removeAttribute("src");
-      it.video.load(); // free the decoder + buffer, poster img shows through
+      it.video.load();
     }
   }
 
-  /* ---------- layout + render loop ---------- */
-  function layout(skew) {
+  /* ---------- layout: position + risk speed effects ---------- */
+  const introState = { p: 0 }; // 0→1, staggered per card inside layout()
+  function layout() {
+    const o = Math.abs(state.lspeed);
+    const scale = Math.max(0.35, 1 - o * 0.7);
+    const center = state.vw / 2;
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       const x = R.wrap(i * state.itemW + state.current + state.itemW, state.total) - state.itemW;
-      it.el.style.transform = `translateX(${x}px) skewX(${skew}deg)`;
+      it.el.style.transform = `translateX(${x}px)`;
+      // intro: cards grow 0.4→1 with a per-card stagger, folded into the same transform
+      const ip = Math.max(0, Math.min(1, introState.p * 1.6 - i * 0.035));
+      const ease = 1 - Math.pow(1 - ip, 3);
+      const introScale = 0.4 + 0.6 * ease;
+      // parallax spread: items further from center shift further, scaled by speed
+      const d = (x + state.itemW / 2 - center) / state.itemW;
+      it.link.style.transform = `translateX(${d * o * 60}%) scale(${scale * introScale})`;
+      it.link.style.opacity = ease;
       const visible = x < state.vw && x + state.itemW > 0;
       const near = x < state.vw * 2 && x + state.itemW > -state.vw;
       if (visible) attach(it);
@@ -117,14 +146,26 @@
       else if (!it.video.paused) it.video.pause();
     }
   }
-  layout(0); // position immediately — never let all items stack at x=0
+  layout();
 
-  let prev = 0;
-  function raf() {
-    state.current = R.lerp(state.current, state.target, 0.075);
-    state.vel = state.current - prev;
-    prev = state.current;
-    layout(Math.max(-6, Math.min(6, state.vel * 0.06)));
+  /* ---------- render loop ---------- */
+  let lastT = performance.now();
+  function raf(now) {
+    const dt = Math.min(0.05, (now - lastT) / 1000);
+    lastT = now;
+    // per-frame lerp 0.12 (0.1 mobile) at 60fps, framerate-independent
+    const lerpFactor = isMobile() ? 0.1 : 0.12;
+    const k = -Math.log(1 - lerpFactor) * 60;
+    state.current = damp(state.current, state.target, k, dt);
+    state.lspeed = damp(state.lspeed, state.speed, 5, dt);
+    state.speed *= Math.pow(0.9, dt * 60);
+    // snap to nearest card once input has settled (risk: snapStrength .1/.07)
+    if (!state.dragging && !state.locked && now - state.lastInput > 140) {
+      const snapStrength = isMobile() ? 0.07 : 0.1;
+      const nearest = Math.round(state.target / state.itemW) * state.itemW;
+      state.target += (nearest - state.target) * snapStrength;
+    }
+    layout();
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
@@ -132,14 +173,8 @@
   /* ---------- intro ---------- */
   function intro() {
     state.locked = false;
-    if (typeof gsap === "undefined") return;
-    gsap.fromTo(".r-worklink",
-      { scale: 0.4, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 1.1, ease: "power3.out", stagger: 0.05 });
-    gsap.fromTo(state, { target: state.itemW * 1.5 }, {
-      target: 0, duration: 1.4, ease: "power3.out",
-      onUpdate: () => {} // target tweened directly
-    });
+    if (typeof gsap === "undefined") { introState.p = 1; return; }
+    gsap.to(introState, { p: 1, duration: 1.6, ease: "none" }); // easing lives in layout()
   }
 
   /* ---------- detail panel ---------- */
@@ -172,7 +207,6 @@
     state.locked = true;
     items.forEach(i => i.video.pause());
     dVideo.play().then(() => { dPlay.textContent = "pause"; }).catch(() => {
-      // sound autoplay blocked without gesture chain — start muted
       dVideo.muted = true;
       dVideo.play().catch(() => {});
       dPlay.textContent = "pause";
@@ -230,7 +264,7 @@
     rRunLoader(intro);
   };
   window.addEventListener("load", startLoader);
-  setTimeout(startLoader, 2500); // safety if load never fires
+  setTimeout(startLoader, 2500);
 
   /* debug/testing handle */
   window.__VBF_WORK = { state, layout, openDetail, closeDetail, items };
