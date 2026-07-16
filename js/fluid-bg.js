@@ -30,76 +30,91 @@
     void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
 
   const FRAG = `
-    precision mediump float;
+    precision highp float;
     uniform vec2 u_res;
     uniform float u_time;
     uniform vec2 u_mouse;   // 0..1, y up
     uniform float u_mstr;   // mouse energy 0..~1
 
+    /* precision-safe hash (no giant sin multipliers → no grid artifacts) */
     float hash(vec2 p){
-      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+      p = fract(p * vec2(123.34, 345.45));
+      p += dot(p, p + 34.345);
+      return fract(p.x * p.y);
     }
+    /* value noise with quintic interpolation → buttery gradients */
     float noise(vec2 p){
       vec2 i = floor(p), f = fract(p);
-      vec2 u = f * f * (3.0 - 2.0 * f);
+      vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
       return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
                  mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
     }
+    /* 3 low-frequency octaves — large smooth blobs, no grain */
     float fbm(vec2 p){
-      float v = 0.0, a = 0.5;
-      for (int i = 0; i < 5; i++){
-        v += a * noise(p);
-        p = p * 2.03 + vec2(17.0, 9.0);
-        a *= 0.5;
-      }
+      float v = 0.5 * noise(p);
+      v += 0.3 * noise(p * 1.9 + vec2(11.0, 7.0));
+      v += 0.2 * noise(p * 3.4 + vec2(3.0, 21.0));
       return v;
     }
 
     void main(){
       vec2 uv = gl_FragCoord.xy / u_res;
       float aspect = u_res.x / u_res.y;
-      vec2 p = vec2(uv.x * aspect, uv.y) * 1.6;
-      float t = u_time * 0.045;
+      vec2 p = (uv - 0.5) * vec2(aspect, 1.0) * 2.2;
+      float t = u_time * 0.05;
 
-      /* cursor swirl: local push of the warp domain */
-      vec2 mp = vec2(u_mouse.x * aspect, u_mouse.y) * 1.6;
-      vec2 dm = p - mp;
-      float md = length(dm);
-      float minf = exp(-md * md * 3.5) * u_mstr;
+      /* big smooth cursor lens — a circle, not a point */
+      vec2 mpos = (u_mouse - 0.5) * vec2(aspect, 1.0) * 2.2;
+      vec2 dm = p - mpos;
+      float dist = length(dm);
+      float R = 0.55;
+      float lens = 1.0 - smoothstep(0.0, R, dist);
+      lens = lens * lens;
+      float energy = 0.35 + u_mstr;
 
-      /* Inigo-Quilez-style double domain warp */
-      vec2 q = vec2(fbm(p + t), fbm(p + vec2(5.2, 1.3) - t * 0.8));
-      vec2 r = vec2(fbm(p + 3.2 * q + vec2(1.7, 9.2) + t * 1.4),
-                    fbm(p + 3.2 * q + vec2(8.3, 2.8) - t));
-      r += normalize(dm + 0.0001) * minf * 0.9;
-      r += vec2(-dm.y, dm.x) * minf * 0.7;   /* rotational component */
+      /* smooth domain warp */
+      vec2 q = vec2(fbm(p * 0.8 + vec2(0.0, t)),
+                    fbm(p * 0.8 + vec2(3.7, -t * 0.8)));
+      vec2 w = p + 1.8 * (q - 0.5);
+      /* the lens refracts the field outward */
+      w += (dm / max(dist, 0.001)) * lens * 0.5 * energy;
 
-      float f = fbm(p + 3.0 * r);
-      float hue = fbm(p * 0.5 + q * 0.8 - t * 0.5); /* warm vs cool regions */
+      float m = fbm(w * 0.55 + t * 0.35);          /* zone mask: warm vs cool */
+      float f = fbm(w * 1.05 - t * 0.25 + q * 0.6); /* shading inside zones */
 
-      /* palette */
-      vec3 black  = vec3(0.0);
-      vec3 bronze = vec3(0.16, 0.10, 0.04);
-      vec3 amber  = vec3(0.76, 0.45, 0.13);
-      vec3 cream  = vec3(0.90, 0.84, 0.73);   /* #e6d5bb */
-      vec3 slate  = vec3(0.07, 0.16, 0.30);
-      vec3 iceblu = vec3(0.32, 0.48, 0.62);
+      /* palette — site identity, risk structure */
+      vec3 nightNavy = vec3(0.02, 0.07, 0.16);
+      vec3 steel     = vec3(0.15, 0.33, 0.52);
+      vec3 sky       = vec3(0.34, 0.56, 0.76);
+      vec3 ember     = vec3(0.38, 0.08, 0.02);
+      vec3 amber     = vec3(0.85, 0.42, 0.10);
+      vec3 cream     = vec3(0.94, 0.87, 0.73);   /* #e6d5bb-ish */
 
-      vec3 warm = mix(bronze, amber, smoothstep(0.42, 0.62, f));
-      warm = mix(warm, cream, smoothstep(0.64, 0.80, f));
-      vec3 cool = mix(slate * 0.7, slate, smoothstep(0.38, 0.55, f));
-      cool = mix(cool, iceblu, smoothstep(0.60, 0.78, f));
+      vec3 cool = mix(nightNavy, steel, smoothstep(0.30, 0.62, f));
+      cool = mix(cool, sky, smoothstep(0.62, 0.85, f));
+      vec3 warm = mix(ember, amber, smoothstep(0.35, 0.62, f));
+      warm = mix(warm, cream, smoothstep(0.70, 0.92, f));
 
-      vec3 ribbon = mix(cool, warm, smoothstep(0.35, 0.65, hue));
-      float body = smoothstep(0.30, 0.52, f);          /* dark dominates */
-      vec3 col = mix(black, ribbon, body);
+      float zone = smoothstep(0.42, 0.58, m);
+      vec3 col = mix(cool, warm, zone);
 
-      /* cursor adds molten glow */
-      col += warm * minf * 0.55 * body;
+      /* molten rim where the two zones meet — the signature glow */
+      float b = m - 0.5;
+      float rim = exp(-b * b * 160.0);
+      col = mix(col, vec3(1.0, 0.45, 0.08), rim * 0.8);
+      col = mix(col, cream, rim * rim * 0.45);
 
-      /* vignette keeps edges quiet for the page chrome */
+      /* deep shadow pockets keep the type readable */
+      float pocket = smoothstep(0.60, 0.28, f) * (1.0 - rim);
+      col *= mix(1.0, 0.10, pocket * 0.85);
+
+      /* faint visible ring at the lens edge (like the reference) */
+      float ring = exp(-pow((dist - R * 0.8) * 14.0, 2.0)) * energy * 0.30;
+      col += cream * ring;
+
+      /* gentle vignette */
       vec2 vg = uv - 0.5;
-      col *= 1.0 - dot(vg, vg) * 0.9;
+      col *= 1.0 - dot(vg, vg) * 0.55;
 
       gl_FragColor = vec4(col, 1.0);
     }`;
@@ -135,7 +150,7 @@
   const uMstr = gl.getUniformLocation(prog, "u_mstr");
 
   /* render at reduced resolution — it's a soft gradient anyway */
-  const SCALE = 0.5;
+  const SCALE = 0.6;
   function resize() {
     canvas.width = Math.max(2, Math.floor(innerWidth * SCALE));
     canvas.height = Math.max(2, Math.floor(innerHeight * SCALE));
@@ -164,7 +179,7 @@
     gl.uniform2f(uRes, canvas.width, canvas.height);
     gl.uniform1f(uTime, reduced ? 0 : elapsed);
     gl.uniform2f(uMouse, mouse.x, mouse.y);
-    gl.uniform1f(uMstr, reduced ? 0 : mouse.str + 0.12); /* faint idle life */
+    gl.uniform1f(uMstr, reduced ? 0 : mouse.str); /* baseline lens lives in the shader */
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     raf = requestAnimationFrame(frame);
   }

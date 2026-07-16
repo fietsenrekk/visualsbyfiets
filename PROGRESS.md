@@ -1,5 +1,20 @@
 # Progress log
 
+## 2026-07-16 (4) — fluid v2: smooth like the reference
+
+User flagged blocky noise + point-cursor vs risk.film's smooth blobs + lens
+circle. Rewrote the shader to the reference structure:
+- highp + precision-safe hash (the sin-hash was breaking into grid artifacts),
+  quintic-interpolated value noise, only 3 low-freq octaves → large smooth blobs.
+- Two big color zones (warm ember→amber→cream / cool navy→steel→sky) with a
+  **molten glowing rim** where they meet (risk's signature), dark shadow pockets.
+- Cursor is now a big circular lens (R≈25% of viewport height): refracts the
+  field radially + faint cream ring at the edge, baseline-visible and charged
+  by movement. Render scale 0.5→0.6.
+- Verified by pixel sampling: avg adjacent delta 5.5 (was blocky), 0.8% sharp
+  pairs = rim crossings only, both zones present, rim colors found, ring
+  luminance 101→168 when charged.
+
 ## 2026-07-16 (3) — fluid "puddle" background site-wide
 
 - `js/fluid-bg.js`: dependency-free WebGL fragment shader — double domain-warped
