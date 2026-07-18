@@ -22,7 +22,7 @@ powershell -File "..\serve-visualsbyfiets.ps1"   # → http://localhost:4196
 ## ⚡ Stripe
 
 **Connected** — all six Payment Links are live in `js/store.js` → `STRIPE_LINKS`
-(Standard Edit €120, Signature Edit €175, 3D Logo €249, Brand Bundle €399, Project Files €49, Preset Pack €29).
+(Standard Edit €150, Signature Edit €250, 3D Logo €499, Brand Bundle €649, Project Files €49, Preset Pack €29).
 To change a price: create a new Payment Link in the Stripe dashboard and replace the URL there.
 For the digital products, attach file delivery via the Payment Link's post-purchase confirmation email.
 If a link is ever emptied, its buy button falls back to a prefilled order email, so nothing breaks.

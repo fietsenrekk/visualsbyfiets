@@ -1,5 +1,30 @@
 # Progress log
 
+## 2026-07-18 — repricing + monthly partnerships
+
+- One-off reprice everywhere (cards, buy buttons, hero copy, footers,
+  contact select, meta/og, about credits line, README): Standard €150,
+  Signature €250, 3D Logo €499, Bundle €649 ("save €149" = 250+499+49−649),
+  extra revision €50. Digital unchanged (€29/€49).
+- shop.html: new "01 — Monthly partnerships" section ABOVE services
+  (renumbered 02/03/04): Brand Motion Retainer from €2,500/mo (Book a call),
+  Creator Content Partner €1,250/mo (Apply), Motion Department from
+  €6,000/mo (featured anchor, Enquire) — all CTAs → contact.html, no
+  Stripe buttons. Two partnership FAQ entries added; refund answer intact.
+- index.html: repriced teaser + "Monthly partnerships from €1,250/mo →"
+  CTA to shop.html#partnerships; contact form gained a partnership option.
+- Stats fixed: values now live in `VBF_STATS` at the top of main.js
+  (TODO for real figures), rendered as static text in the HTML too —
+  zeros are impossible even with JS off; count-up is an enhancement
+  keyed by data-stat and skipped under reduced motion.
+- Stripe caveat honored: link URLs untouched; TODO comments above every
+  repriced buy button + in store.js. Four new Payment Links needed
+  (150/250/499/649) — checklist delivered in chat.
+- Verified: grep clean of old prices; partnerships above services on
+  desktop + 390px; partnership CTAs → contact, 6 one-off buy buttons
+  still Stripe-wired; stats render 150+/10M+/30+; meta/og updated;
+  no console errors.
+
 ## 2026-07-16 (5) — award-level elevation pass
 
 **Fluid:** `js/fluid.js` — the real Navier-Stokes simulation (Dobryakov MIT,

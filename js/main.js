@@ -3,6 +3,19 @@
    ============================================================ */
 gsap.registerPlugin(ScrollTrigger);
 
+/* ============================================================
+   PROOF NUMBERS — single source of truth for the stats strip.
+   TODO(fiets): replace with your real figures. `value` is the
+   number that counts up; `suffix` is appended ("+", "M+", …).
+   The HTML carries the same values as static text, so nothing
+   ever renders as 0 — this only drives the count-up animation.
+   ============================================================ */
+const VBF_STATS = {
+  editsDelivered:   { value: 150, suffix: "+"  },
+  combinedViews:    { value: 10,  suffix: "M+" },
+  artistsAndBrands: { value: 30,  suffix: "+"  }
+};
+
 /* ---------- intro veil: entering the space, no fake loading ---------- */
 (function introVeil() {
   const veil = document.querySelector(".intro-veil");
@@ -80,17 +93,19 @@ document.querySelectorAll(".reveal").forEach(el => {
     });
 });
 
-/* ---------- stat counters ---------- */
-document.querySelectorAll("[data-count]").forEach(el => {
-  const target = parseFloat(el.getAttribute("data-count"));
-  const suffix = el.getAttribute("data-suffix") || "";
+/* ---------- stat counters (driven by VBF_STATS above) ---------- */
+document.querySelectorAll("[data-stat]").forEach(el => {
+  const stat = VBF_STATS[el.getAttribute("data-stat")];
+  if (!stat) return;
+  el.textContent = stat.value + stat.suffix; // final value immediately — never zeros
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const obj = { v: 0 };
   ScrollTrigger.create({
     trigger: el, start: "top 90%", once: true,
     onEnter() {
       gsap.to(obj, {
-        v: target, duration: 1.6, ease: "power2.out",
-        onUpdate() { el.textContent = Math.round(obj.v) + suffix; }
+        v: stat.value, duration: 1.6, ease: "power2.out",
+        onUpdate() { el.textContent = Math.round(obj.v) + stat.suffix; }
       });
     }
   });

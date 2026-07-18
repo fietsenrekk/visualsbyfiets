@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <script>(function(){try{var t=localStorage.getItem("vbf-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop — Visuals by Fiets | Edits from €120, 3D Logos, Project Files</title>
+  <title>Shop — Visuals by Fiets | Edits from €150, 3D Logos, Project Files</title>
   <meta name="description" content="Book a video edit, order a 3D logo animation, or grab project files and presets. Flat pricing, secure Stripe checkout.">
   <link rel="icon" type="image/png" href="assets/img/logo-white.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,11 +38,60 @@
     <p class="page-hero__sub">Flat pricing. Secure Stripe checkout — card, iDEAL, Apple Pay, Google Pay. Your slot locks the moment you pay; brief me right after via DM or email.</p>
   </section>
 
+  <!-- MONTHLY PARTNERSHIPS -->
+  <section class="section section--tight" id="partnerships">
+    <div class="section__head">
+      <div>
+        <span class="section__num">01 — Monthly partnerships</span>
+        <h2 class="section__title reveal">Own the <span class="accent">month</span></h2>
+      </div>
+      <p class="section__lede reveal">For accounts and brands that need consistent, converting content every month — fast, zero friction, guaranteed 48-hour first cuts.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <span class="price-card__type">For brands, labels &amp; agencies</span>
+        <h3 class="price-card__name">Brand Motion Retainer</h3>
+        <div class="price-card__price"><small>from</small> €2,500 <small>/ month</small></div>
+        <ul class="price-card__list">
+          <li>Full pipeline: short-form edits + motion design + 3D idents</li>
+          <li>Brand-locked templates, one identity across everything</li>
+          <li>48-hour SLA on first cuts, direct line to me</li>
+          <li>Monthly performance review</li>
+        </ul>
+        <a class="btn" href="contact.html">Book a call</a>
+      </div>
+      <div class="price-card reveal">
+        <span class="price-card__type">8 edits / month</span>
+        <h3 class="price-card__name">Creator Content Partner</h3>
+        <div class="price-card__price">€1,250 <small>/ month</small></div>
+        <ul class="price-card__list">
+          <li>8 short-form edits per month, priority queue</li>
+          <li>48h first cuts, platform-ready exports</li>
+          <li>Monthly content review</li>
+        </ul>
+        <a class="btn" href="contact.html">Apply</a>
+      </div>
+      <div class="price-card price-card--featured reveal">
+        <span class="price-card__flag">Full service</span>
+        <span class="price-card__type">The whole department</span>
+        <h3 class="price-card__name">Motion Department</h3>
+        <div class="price-card__price"><small>from</small> €6,000 <small>/ month</small></div>
+        <ul class="price-card__list">
+          <li>Everything in the Brand Retainer</li>
+          <li>Content strategy included</li>
+          <li>Always-first priority on every queue</li>
+          <li>Monthly strategy call</li>
+        </ul>
+        <a class="btn btn--solid" href="contact.html">Enquire</a>
+      </div>
+    </div>
+  </section>
+
   <!-- SERVICES -->
   <section class="section section--tight" id="services">
     <div class="section__head">
       <div>
-        <span class="section__num">01 — Services</span>
+        <span class="section__num">02 — Services</span>
         <h2 class="section__title reveal">Commissions</h2>
       </div>
       <p class="section__lede reveal">Every order includes platform-ready exports (TikTok / Reels / Shorts) and a licensed final master.</p>
@@ -51,20 +100,21 @@
       <div class="price-card reveal">
         <span class="price-card__type">Short-form starter</span>
         <h3 class="price-card__name">Standard Edit</h3>
-        <div class="price-card__price">€120</div>
+        <div class="price-card__price">€150</div>
         <ul class="price-card__list">
           <li>Up to 20 seconds, 1 video</li>
           <li>Beat-synced cuts, captions & color</li>
           <li>1 revision round</li>
           <li>Delivered in 3–5 days</li>
         </ul>
-        <button class="btn" data-buy="standard-edit">Buy — €120</button>
+        <!-- TODO: replace with new Stripe payment link for €150 (js/store.js -> standard-edit) -->
+        <button class="btn" data-buy="standard-edit">Buy — €150</button>
       </div>
       <div class="price-card price-card--featured reveal" id="signature">
         <span class="price-card__flag">Best value</span>
         <span class="price-card__type">The one you came for</span>
         <h3 class="price-card__name">Signature Edit</h3>
-        <div class="price-card__price">€175</div>
+        <div class="price-card__price">€250</div>
         <ul class="price-card__list">
           <li>Up to 60 seconds, full VFX treatment</li>
           <li>Sound design, typography, transitions</li>
@@ -72,31 +122,34 @@
           <li>Priority delivery in 2–4 days</li>
           <li>Raw + platform exports included</li>
         </ul>
-        <button class="btn btn--solid" data-buy="signature-edit">Buy — €175</button>
+        <!-- TODO: replace with new Stripe payment link for €250 (js/store.js -> signature-edit) -->
+        <button class="btn btn--solid" data-buy="signature-edit">Buy — €250</button>
       </div>
       <div class="price-card reveal" id="logo-3d">
         <span class="price-card__type">3D motion</span>
         <h3 class="price-card__name">3D Logo Animation</h3>
-        <div class="price-card__price">€249</div>
+        <div class="price-card__price">€499</div>
         <ul class="price-card__list">
           <li>Custom 3D model of your logo</li>
           <li>Cinematic lighting, chrome/gold/glass materials</li>
           <li>Seamless loop + intro sting</li>
           <li>4K render, transparent alpha on request</li>
         </ul>
-        <button class="btn" data-buy="logo-3d">Buy — €249</button>
+        <!-- TODO: replace with new Stripe payment link for €499 (js/store.js -> logo-3d) -->
+        <button class="btn" data-buy="logo-3d">Buy — €499</button>
       </div>
       <div class="price-card reveal" id="bundle">
         <span class="price-card__type">Everything, together</span>
         <h3 class="price-card__name">Brand Bundle</h3>
-        <div class="price-card__price">€399 <small>save €74</small></div>
+        <div class="price-card__price">€649 <small>save €149</small></div>
         <ul class="price-card__list">
-          <li>1× Signature Edit (€175)</li>
-          <li>1× 3D Logo Animation (€249)</li>
+          <li>1× Signature Edit (€250)</li>
+          <li>1× 3D Logo Animation (€499)</li>
           <li>Project files included (€49)</li>
           <li>Top-priority queue position</li>
         </ul>
-        <button class="btn btn--solid" data-buy="brand-bundle">Buy — €399</button>
+        <!-- TODO: replace with new Stripe payment link for €649 (js/store.js -> brand-bundle) -->
+        <button class="btn btn--solid" data-buy="brand-bundle">Buy — €649</button>
       </div>
     </div>
   </section>
@@ -105,7 +158,7 @@
   <section class="section section--tight" id="files">
     <div class="section__head">
       <div>
-        <span class="section__num">02 — Digital products</span>
+        <span class="section__num">03 — Digital products</span>
         <h2 class="section__title reveal">Own the <span class="outline">pipeline</span></h2>
       </div>
       <p class="section__lede reveal">Instant-delivery downloads. Learn exactly how the edits are built, or drop my presets straight into your own timeline.</p>
@@ -160,7 +213,7 @@
   <section class="section">
     <div class="section__head">
       <div>
-        <span class="section__num">03 — FAQ</span>
+        <span class="section__num">04 — FAQ</span>
         <h2 class="section__title reveal">Good to know</h2>
       </div>
     </div>
@@ -175,7 +228,7 @@
       </div>
       <div class="faq__item">
         <button class="faq__q">How many revisions do I get?</button>
-        <div class="faq__a"><p>Standard includes 1 round, Signature includes 3. A round means one consolidated list of timestamped notes. Extra rounds are €35 each so neither of us burns out.</p></div>
+        <div class="faq__a"><p>Standard includes 1 round, Signature includes 3. A round means one consolidated list of timestamped notes. Extra rounds are €50 each so neither of us burns out.</p></div>
       </div>
       <div class="faq__item">
         <button class="faq__q">What formats do I receive?</button>
@@ -189,6 +242,14 @@
         <button class="faq__q">What if I'm not happy?</button>
         <div class="faq__a"><p>Tell me. Revisions exist exactly for this, and I don't consider a piece finished until it hits. If a commission can't be started (queue full, footage unusable), you get a full refund — no questions.</p></div>
       </div>
+      <div class="faq__item">
+        <button class="faq__q">How do monthly partnerships work?</button>
+        <div class="faq__a"><p>You apply or book a call, we scope the month together, and you get a fixed monthly slot. Slots are limited so every partner keeps the 48-hour SLA. Partnerships roll monthly — cancel any time with 30 days notice.</p></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">Why don't partnerships have a buy button?</button>
+        <div class="faq__a"><p>Because they're scoped to your brand first. On a short call we lock volume, formats and priorities — then you get a tailored agreement instead of a generic checkout. That's how the retainer stays worth more than it costs.</p></div>
+      </div>
     </div>
   </section>
 
@@ -197,7 +258,7 @@
     <h2 class="cta__title reveal">Lock your <span class="outline">slot</span></h2>
     <p class="reveal">Limited commissions per month. When the queue is full, it's full.</p>
     <div class="reveal" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a class="btn btn--solid btn--lg" href="#signature">Signature Edit — €175</a>
+      <a class="btn btn--solid btn--lg" href="#signature">Signature Edit — €250</a>
       <a class="btn btn--lg" href="contact.html">Ask a question</a>
     </div>
   </section>
@@ -228,8 +289,8 @@
         <div class="footer__col">
           <h4>Order</h4>
           <ul>
-            <li><a href="#signature">Signature Edit — €175</a></li>
-            <li><a href="#logo-3d">3D Logo — €249</a></li>
+            <li><a href="#signature">Signature Edit — €250</a></li>
+            <li><a href="#logo-3d">3D Logo — €499</a></li>
             <li><a href="#files">Project Files — €49</a></li>
           </ul>
         </div>
@@ -247,7 +308,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="js/data.js?v=2"></script>
-  <script src="js/store.js?v=2"></script>
-  <script src="js/main.js?v=4"></script>
+  <script src="js/store.js?v=3"></script>
+  <script src="js/main.js?v=5"></script>
 </body>
 </html>

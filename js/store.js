@@ -4,13 +4,17 @@
    https://buy.stripe.com/... URL for each product.
    Buy buttons send the customer straight to Stripe checkout.
    ============================================================ */
+/* REPRICING 2026-07: the four commission links below still point at
+   Stripe Payment Links carrying the OLD amounts. Create new links in
+   the Stripe dashboard at the new prices and paste them here.
+   Digital products (project-files, preset-pack) are unchanged. */
 const STRIPE_LINKS = {
-  "standard-edit":  "https://buy.stripe.com/5kQbJ03Gvcon1mz4bu2VG02",   // €120
-  "signature-edit": "https://buy.stripe.com/5kQ5kC1ynfAz6GT5fy2VG03",   // €175
-  "logo-3d":        "https://buy.stripe.com/7sYaEWdh5ewvaX90Zi2VG04",   // €249
-  "brand-bundle":   "https://buy.stripe.com/5kQ00ifpd9cb2qD7nG2VG05",   // €399
-  "project-files":  "https://buy.stripe.com/cNi8wO5ODbkjc1dgYg2VG06",   // €49
-  "preset-pack":    "https://buy.stripe.com/cNibJ0b8X2NN1mz8rK2VG07"    // €29
+  "standard-edit":  "https://buy.stripe.com/5kQbJ03Gvcon1mz4bu2VG02",   // TODO: new link — €150 (link still charges €120)
+  "signature-edit": "https://buy.stripe.com/5kQ5kC1ynfAz6GT5fy2VG03",   // TODO: new link — €250 (link still charges €175)
+  "logo-3d":        "https://buy.stripe.com/7sYaEWdh5ewvaX90Zi2VG04",   // TODO: new link — €499 (link still charges €249)
+  "brand-bundle":   "https://buy.stripe.com/5kQ00ifpd9cb2qD7nG2VG05",   // TODO: new link — €649 (link still charges €399)
+  "project-files":  "https://buy.stripe.com/cNi8wO5ODbkjc1dgYg2VG06",   // €49 — unchanged
+  "preset-pack":    "https://buy.stripe.com/cNibJ0b8X2NN1mz8rK2VG07"    // €29 — unchanged
 };
 
 function buyProduct(id) {
