@@ -1,5 +1,38 @@
 # Progress log
 
+## 2026-07-20 — footer signature: telemetry scan on the logo
+
+User asked for the Unicorn Studio scene effect on the main logo, in the
+site colorway. A raw Unicorn embed can't work: its colors are baked into
+the hosted project (`61w8ZtzLS8iS8YyHdBkN`) and can't be recolored from
+outside, so it was rebuilt natively in `js/logo-fx.js`.
+
+Effect layers (matching the reference frames):
+- **Ordered-dither pixel matrix** — analytic Bayer 8x8 on a device-pixel
+  cell grid; cells tighten from 4px → 2px under the cursor (17 tonal
+  steps measured, so it dithers rather than posterizes).
+- **Moving scanlines** — 3px line striping + two bright lines sweeping
+  vertically at different rates.
+- **Glitch blocks** — uv quantized into ~20% randomly-offset blocks,
+  re-rolled 3x/sec; the cursor drags blocks along its vector.
+- **Chromatic split** — R/B alpha offset, widening inside the trace.
+- **Background blocks** — faint dithered blocks drifting behind the mark
+  (rendered where logo alpha ≈ 0 instead of discarding).
+- **Cursor tracing** — 8-point decaying trail passed as `vec3[8]`;
+  sharpens dither, brightens, drags blocks, boosts readouts.
+- **Numeric telemetry** — 10 DOM readouts (mono, ~11 Hz, mixed
+  `0.0000` / 4-digit ints, every 4th boxed in the accent color).
+
+Theme-aware (gold ↔ violet palettes tween on `data-theme`), paused when
+offscreen/hidden, single calm frame + no moving parts under
+reduced-motion, `<img>` fallback with no WebGL.
+
+Placed as `.footer__signature` on index/shop/contact/thanks (the risk
+pages keep their own fixed-scene chrome); the now-redundant small footer
+logo img was removed. Verified: maxAlpha 255 / 23.4% coverage (the mark),
+trace raises coverage to 24.2%, 10 readouts ticking, renders in both
+themes, zero console errors.
+
 ## 2026-07-18 (2) — footer signature (liquid-metal logo)
 
 User supplied a Webflow embed for a Unicorn Studio scene

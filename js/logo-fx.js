@@ -1,14 +1,14 @@
 /* ============================================================
-   VBF LOGO FX — the footer "signature": the main Visuals by
-   Fiets mark rendered as flowing liquid metal in the site's
-   own colorway, reacting to the cursor. Self-contained WebGL,
-   no dependencies, theme-aware (recolors with gold ↔ violet),
-   reduced-motion + no-WebGL fallbacks.
+   VBF LOGO FX — footer "signature scan".
+   The Visuals by Fiets mark processed like a live telemetry
+   feed: ordered-dither pixel matrix, sweeping scanlines,
+   glitch-displaced blocks, chromatic split, drifting blocks in
+   the background, cursor tracing that sharpens + ignites the
+   pixels it passes over, and floating numeric readouts.
 
-   Mounts on any <div data-logo-fx>. The logo texture is the
-   transparent white mark (assets/img/logo-white.png); its
-   tight bounding box is measured at load so the mark fills
-   the frame with no dead margin.
+   Palette-locked to the site (gold ↔ violet, follows the theme
+   engine). Self-contained WebGL + a DOM readout layer.
+   Reduced-motion → single calm frame, no moving parts.
    ============================================================ */
 
 (function () {
@@ -18,18 +18,19 @@
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const LOGO_SRC = "assets/img/logo-white.png";
+  const TRAIL = 8;
 
-  /* theme → [deep, base, highlight] as 0..1 rgb */
+  /* theme → [deep, base, highlight] 0..1 rgb */
   const THEMES = {
     gold: {
-      A: [0.227, 0.165, 0.071],  // bronze
-      B: [0.902, 0.835, 0.733],  // beige #e6d5bb
-      C: [1.000, 0.957, 0.878]   // warm cream
+      A: [0.180, 0.130, 0.055],
+      B: [0.902, 0.835, 0.733],   // #e6d5bb
+      C: [1.000, 0.965, 0.900]
     },
     violet: {
-      A: [0.141, 0.075, 0.329],  // deep indigo
-      B: [0.725, 0.651, 1.000],  // lavender #b9a6ff
-      C: [0.937, 0.918, 1.000]   // lilac highlight
+      A: [0.110, 0.060, 0.280],
+      B: [0.725, 0.651, 1.000],   // #b9a6ff
+      C: [0.945, 0.930, 1.000]
     }
   };
   const themeName = () =>
@@ -44,12 +45,12 @@
     precision highp float;
     varying vec2 vUv;
     uniform sampler2D uLogo;
-    uniform vec2 uUvMin;
-    uniform vec2 uUvSize;
+    uniform vec2  uUvMin;
+    uniform vec2  uUvSize;
+    uniform vec2  uRes;
     uniform float uTime;
-    uniform vec2 uPointer;   // 0..1, y up
-    uniform float uActive;   // pointer strength 0..1
-    uniform vec3 uA; uniform vec3 uB; uniform vec3 uC;
+    uniform vec3  uTrail[${TRAIL}];   // x, y, strength
+    uniform vec3  uA; uniform vec3 uB; uniform vec3 uC;
     uniform float uReduced;
 
     float hash(vec2 p){ p = fract(p*vec2(123.34,345.45)); p += dot(p,p+34.345); return fract(p.x*p.y); }
@@ -59,42 +60,113 @@
       return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x),
                  mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x),u.y);
     }
-    float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<4;i++){ v+=a*noise(p); p=p*2.03+vec2(11.0,7.0); a*=0.5;} return v; }
+    float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<3;i++){ v+=a*noise(p); p=p*2.03+vec2(11.0,7.0); a*=0.5;} return v; }
+
+    /* ordered dither (analytic Bayer) — the pixel-matrix look */
+    float bayer2(vec2 a){ a = floor(a); return fract(a.x/2.0 + a.y*a.y*0.75); }
+    float bayer8(vec2 a){
+      return bayer2(0.25*a)*0.0625 + bayer2(0.5*a)*0.25 + bayer2(a);
+    }
+
+    float logoAlpha(vec2 uv){
+      vec2 s = uUvMin + clamp(uv, 0.0, 1.0) * uUvSize;
+      return texture2D(uLogo, s).a;
+    }
 
     void main(){
-      vec2 uv = vUv;
-      vec2 pp = uPointer;
-      float pd = distance(uv, pp);
-      float pinf = exp(-pd*pd*8.0) * uActive;
       float rm = 1.0 - uReduced;
+      float t  = uTime;
+      vec2 uv  = vUv;
+      vec2 px  = gl_FragCoord.xy;
 
-      float t = uTime * 0.15;
-      vec2 flow = vec2(fbm(uv*3.0 + vec2(0.0, t)), fbm(uv*3.0 + vec2(5.2, -t))) - 0.5;
-      float amp = (0.010 + 0.05*pinf) * rm;
-      vec2 disp = flow * amp;
-      vec2 dir = normalize(uv - pp + 0.0001);
-      disp += dir * pinf * 0.02 * rm;
+      /* ---- cursor trace: accumulate influence from the trail ---- */
+      float trace = 0.0;
+      vec2  traceDir = vec2(0.0);
+      for (int i = 0; i < ${TRAIL}; i++) {
+        vec2 tp = uTrail[i].xy;
+        float s = uTrail[i].z;
+        if (s <= 0.001) continue;
+        float d = distance(uv, tp);
+        float infl = exp(-d*d*70.0) * s;
+        trace += infl;
+        traceDir += normalize(uv - tp + 0.0001) * infl;
+      }
+      trace = clamp(trace, 0.0, 1.4);
 
-      vec2 s = uUvMin + (uv + disp) * uUvSize;
-      float ca = (0.0022 + 0.006*pinf) * rm;   // subtle liquid-glass split, stays in palette
-      float aR = texture2D(uLogo, s + vec2(ca, 0.0)).a;
-      float aG = texture2D(uLogo, s).a;
-      float aB = texture2D(uLogo, s - vec2(ca, 0.0)).a;
+      /* ---- glitch blocks: quantise uv, shove some blocks sideways ---- */
+      vec2 bSize = vec2(0.075, 0.055);
+      vec2 bId   = floor(uv / bSize);
+      float bTick = floor(t * 3.0);
+      float bh   = hash(bId + bTick * 1.37);
+      float bActive = step(0.80, bh) * rm;               // ~20% of blocks
+      vec2  bOff = vec2((hash(bId + 7.7) - 0.5) * 0.10,
+                        (hash(bId + 3.1) - 0.5) * 0.025) * bActive;
+      /* the cursor drags blocks too */
+      bOff += traceDir * 0.05 * rm;
+
+      /* ---- liquid flow underneath (kept subtle) ---- */
+      vec2 flow = vec2(fbm(uv*3.0 + vec2(0.0, t*0.12)),
+                       fbm(uv*3.0 + vec2(5.2, -t*0.12))) - 0.5;
+      vec2 duv = uv + bOff + flow * (0.008 + 0.03 * trace) * rm;
+
+      /* ---- chromatic split (stronger inside the trace) ---- */
+      float ca = (0.0030 + 0.010 * trace) * rm;
+      float aR = logoAlpha(duv + vec2(ca, 0.0));
+      float aG = logoAlpha(duv);
+      float aB = logoAlpha(duv - vec2(ca, 0.0));
+
+      /* ---- shading value: metal gradient + flow ---- */
+      float g = fbm(uv*2.2 + vec2(-t*0.20, t*0.14));
+      g = clamp(g*0.9 + (uv.y - 0.15) * 0.55 + trace * 0.55, 0.0, 1.0);
+
+      /* ---- pixel matrix: quantise to cells, then ordered-dither ---- */
+      float cell = mix(4.0, 2.0, clamp(trace, 0.0, 1.0));   // sharper under the cursor
+      vec2  cellId = floor(px / cell);
+      float dith = bayer8(cellId);
+      float cellG = clamp(g + (hash(cellId*0.017 + bTick*0.11) - 0.5) * 0.16, 0.0, 1.0);
+      /* soft 1-bit-ish quantisation → visible dot grid, never full posterise */
+      float lit = smoothstep(-0.10, 0.10, cellG - dith * 0.85);
+      float shade = mix(cellG, mix(cellG * 0.45, 1.0, lit), 0.75);
+
+      /* ---- scanlines + one bright sweeping line ---- */
+      float lines = 0.80 + 0.20 * step(0.5, fract(px.y / 3.0));
+      float sweepPos = fract(t * 0.10);
+      float sweep = exp(-pow((fract(uv.y - sweepPos + 0.5) - 0.5) * 26.0, 2.0)) * rm;
+      float sweep2 = exp(-pow((fract(uv.y - fract(t * 0.037 + 0.45) + 0.5) - 0.5) * 60.0, 2.0)) * rm;
+
+      /* ---- colour from the palette ---- */
+      vec3 col = mix(uA, uB, smoothstep(0.12, 0.58, shade));
+      col = mix(col, uC, smoothstep(0.62, 0.98, shade));
+      col *= lines;
+      col += uC * (sweep * 0.35 + sweep2 * 0.55);
+      col += uC * trace * 0.30;
+      col.r *= 0.98 + (aR - aG) * 0.40;
+      col.b *= 0.98 + (aB - aG) * 0.40;
+
+      /* speckle: a few bright pixels riding the dither */
+      float spark = step(0.9975, hash(cellId + floor(t * 8.0)));
+      col += uC * spark * (0.35 + trace * 0.5);
+
       float alpha = aG;
-      if (alpha < 0.01) discard;
 
-      float g = fbm(uv*2.2 + vec2(-t*1.3, t));
-      g = clamp(g + (uv.y - 0.2) * 0.5 + pinf * 0.6, 0.0, 1.0);
-      vec3 col = mix(uA, uB, smoothstep(0.15, 0.55, g));
-      col = mix(col, uC, smoothstep(0.60, 0.95, g));
-      col.r *= 0.98 + (aR - aG) * 0.32;         // warm-side glint only
-      col.b *= 0.98 + (aB - aG) * 0.32;
-      col += uC * pinf * 0.35;
+      /* ---- background: faint drifting blocks outside the mark ---- */
+      if (alpha < 0.02) {
+        vec2 gSize = vec2(0.10, 0.075);
+        vec2 gId = floor((uv + vec2(t * 0.010, -t * 0.006)) / gSize);
+        float gh = hash(gId);
+        float show = step(0.86, gh) * rm;
+        float bgDith = step(bayer8(floor(px / 5.0)), 0.55);
+        float bgA = show * bgDith * (0.030 + 0.10 * trace);
+        if (bgA < 0.002) discard;
+        vec3 bgCol = mix(uA, uB, 0.35 + 0.45 * hash(gId + 4.2)) * (0.6 + sweep);
+        gl_FragColor = vec4(bgCol * bgA, bgA);
+        return;
+      }
 
-      gl_FragColor = vec4(col * alpha, alpha);  // premultiplied
+      gl_FragColor = vec4(col * alpha, alpha);   // premultiplied
     }`;
 
-  /* measure the logo's tight bounding box (crop transparent margins) */
+  /* ---------- tight bounding box of the mark ---------- */
   function measureLogo(img) {
     const c = document.createElement("canvas");
     const w = c.width = img.naturalWidth;
@@ -115,13 +187,52 @@
       }
     } catch (e) { found = false; }
     if (!found) { minX = 0; minY = 0; maxX = w; maxY = h; }
-    const pad = Math.round(Math.min(w, h) * 0.02);
+    const pad = Math.round(Math.min(w, h) * 0.03);
     minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad);
     maxX = Math.min(w, maxX + pad); maxY = Math.min(h, maxY + pad);
     return {
-      uvMin: [minX / w, 1 - maxY / h],           // flip Y for GL
+      uvMin: [minX / w, 1 - maxY / h],
       uvSize: [(maxX - minX) / w, (maxY - minY) / h],
       aspect: (maxX - minX) / (maxY - minY)
+    };
+  }
+
+  /* ---------- numeric readouts (the telemetry labels) ---------- */
+  function buildReadouts(container) {
+    const layer = document.createElement("div");
+    layer.className = "logo-fx__readouts";
+    layer.setAttribute("aria-hidden", "true");
+    container.appendChild(layer);
+
+    const SPOTS = [
+      [0.09, 0.22], [0.20, 0.62], [0.33, 0.14], [0.44, 0.78],
+      [0.57, 0.28], [0.66, 0.68], [0.78, 0.18], [0.88, 0.52],
+      [0.15, 0.86], [0.72, 0.88]
+    ];
+    const labels = SPOTS.map(([x, y], i) => {
+      const el = document.createElement("span");
+      el.className = "logo-fx__num" + (i % 4 === 0 ? " is-boxed" : "");
+      el.style.left = (x * 100).toFixed(1) + "%";
+      el.style.top = (y * 100).toFixed(1) + "%";
+      el.textContent = "0.0000";
+      layer.appendChild(el);
+      return { el, base: Math.random(), phase: Math.random() * Math.PI * 2, int: i % 3 === 0 };
+    });
+
+    let last = 0;
+    return function update(now, trace) {
+      if (now - last < 90) return;               // ~11 Hz: reads as instrumentation
+      last = now;
+      const t = now / 1000;
+      labels.forEach((l, i) => {
+        const wave = (Math.sin(t * 0.7 + l.phase) + 1) / 2;
+        const v = (l.base * 0.6 + wave * 0.4 + trace * 0.25) % 1;
+        l.el.textContent = l.int
+          ? String(Math.round(1000 + v * 8999))
+          : v.toFixed(4);
+        const vis = 0.45 + wave * 0.40 + trace * 0.5;
+        l.el.style.opacity = Math.min(1, vis).toFixed(2);
+      });
     };
   }
 
@@ -131,14 +242,20 @@
     container.appendChild(canvas);
     container.style.aspectRatio = box.aspect.toFixed(4);
 
-    const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: true });
+    const gl = canvas.getContext("webgl", {
+      alpha: true, premultipliedAlpha: true, antialias: false
+    });
     if (!gl) { fallback(container); return; }
 
-    function compile(type, src) {
+    const compile = (type, src) => {
       const s = gl.createShader(type);
       gl.shaderSource(s, src); gl.compileShader(s);
-      return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
-    }
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.warn("logo-fx:", gl.getShaderInfoLog(s));
+        return null;
+      }
+      return s;
+    };
     const vs = compile(gl.VERTEX_SHADER, VERT);
     const fs = compile(gl.FRAGMENT_SHADER, FRAG);
     if (!vs || !fs) { fallback(container); return; }
@@ -162,7 +279,7 @@
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
 
     const U = {};
-    ["uLogo", "uUvMin", "uUvSize", "uTime", "uPointer", "uActive", "uA", "uB", "uC", "uReduced"]
+    ["uLogo", "uUvMin", "uUvSize", "uRes", "uTime", "uTrail", "uA", "uB", "uC", "uReduced"]
       .forEach(n => U[n] = gl.getUniformLocation(prog, n));
 
     gl.enable(gl.BLEND);
@@ -172,26 +289,35 @@
     gl.uniform2fv(U.uUvSize, box.uvSize);
     gl.uniform1f(U.uReduced, reduced ? 1 : 0);
 
-    /* colors, tweened on theme change */
-    const cur = { A: THEMES.gold.A.slice(), B: THEMES.gold.B.slice(), C: THEMES.gold.C.slice() };
-    let tgt = THEMES[themeName()];
-    // start already on the active theme (no first-frame flash)
-    cur.A = tgt.A.slice(); cur.B = tgt.B.slice(); cur.C = tgt.C.slice();
+    /* palette, tweened on theme change */
+    const t0 = THEMES[themeName()];
+    const cur = { A: t0.A.slice(), B: t0.B.slice(), C: t0.C.slice() };
+    let tgt = t0;
+    new MutationObserver(() => { tgt = THEMES[themeName()]; if (reduced) drawOnce(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-    /* pointer */
-    const ptr = { x: 0.5, y: 0.5, active: 0, targetActive: 0 };
+    /* cursor trail */
+    const trail = new Float32Array(TRAIL * 3);
+    let traceLevel = 0;
     if (!reduced) {
       window.addEventListener("pointermove", (e) => {
         const r = container.getBoundingClientRect();
-        const inside =
-          e.clientX >= r.left - r.width * 0.4 && e.clientX <= r.right + r.width * 0.4 &&
-          e.clientY >= r.top - r.height * 0.8 && e.clientY <= r.bottom + r.height * 0.8;
-        ptr.x = (e.clientX - r.left) / r.width;
-        ptr.y = 1 - (e.clientY - r.top) / r.height;
-        ptr.targetActive = inside ? 1 : 0;
+        const pad = 0.35;
+        if (e.clientX < r.left - r.width * pad || e.clientX > r.right + r.width * pad ||
+            e.clientY < r.top - r.height * pad || e.clientY > r.bottom + r.height * pad) return;
+        const x = (e.clientX - r.left) / r.width;
+        const y = 1 - (e.clientY - r.top) / r.height;
+        // shift trail, newest first
+        for (let i = TRAIL - 1; i > 0; i--) {
+          trail[i * 3] = trail[(i - 1) * 3];
+          trail[i * 3 + 1] = trail[(i - 1) * 3 + 1];
+          trail[i * 3 + 2] = trail[(i - 1) * 3 + 2];
+        }
+        trail[0] = x; trail[1] = y; trail[2] = 1;
       }, { passive: true });
-      window.addEventListener("pointerleave", () => { ptr.targetActive = 0; });
     }
+
+    const updateReadouts = buildReadouts(container);
 
     function resize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -206,31 +332,66 @@
     resize();
 
     const start = performance.now();
-    let raf = null, inView = true;
+    const lerp3 = (a, b, k) => { for (let i = 0; i < 3; i++) a[i] += (b[i] - a[i]) * k; };
 
-    function lerp3(a, b, k) { for (let i = 0; i < 3; i++) a[i] += (b[i] - a[i]) * k; }
-    function render(now) {
+    function draw(now) {
       resize();
-      const t = reduced ? 0 : (now - start) / 1000;
-      ptr.active += (ptr.targetActive - ptr.active) * 0.08;
+      const t = reduced ? 2.5 : (now - start) / 1000;
+      /* decay the trail */
+      traceLevel = 0;
+      if (!reduced) {
+        for (let i = 0; i < TRAIL; i++) {
+          trail[i * 3 + 2] *= 0.90 - i * 0.015;
+          if (trail[i * 3 + 2] < 0.002) trail[i * 3 + 2] = 0;
+          traceLevel = Math.max(traceLevel, trail[i * 3 + 2]);
+        }
+      }
       lerp3(cur.A, tgt.A, 0.08); lerp3(cur.B, tgt.B, 0.08); lerp3(cur.C, tgt.C, 0.08);
+      gl.uniform2f(U.uRes, canvas.width, canvas.height);
       gl.uniform1f(U.uTime, t);
-      gl.uniform2f(U.uPointer, ptr.x, ptr.y);
-      gl.uniform1f(U.uActive, ptr.active);
+      gl.uniform3fv(U.uTrail, trail);
       gl.uniform3fv(U.uA, cur.A);
       gl.uniform3fv(U.uB, cur.B);
       gl.uniform3fv(U.uC, cur.C);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (pendingProbe) { pendingProbe(readPixelsNow()); pendingProbe = null; }
+      updateReadouts(now, traceLevel);
     }
-    function loop(now) { render(now); raf = requestAnimationFrame(loop); }
 
-    function play() { if (!raf) { raf = requestAnimationFrame(loop); } }
-    function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+    /* read the framebuffer in the same frame as the draw (testing hook) */
+    let pendingProbe = null;
+    function readPixelsNow() {
+      const w = canvas.width, h = canvas.height;
+      const buf = new Uint8Array(w * h * 4);
+      gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      let maxA = 0, maxL = 0, nonZero = 0, distinct = {};
+      for (let i = 0; i < buf.length; i += 4) {
+        const a = buf[i + 3];
+        if (a > maxA) maxA = a;
+        const l = (buf[i] + buf[i + 1] + buf[i + 2]) / 3;
+        if (l > maxL) maxL = l;
+        if (a > 8) {
+          nonZero++;
+          distinct[Math.round(l / 16)] = 1;
+        }
+      }
+      return {
+        maxA, maxL,
+        coverage: +(nonZero / (w * h) * 100).toFixed(2),
+        tonalSteps: Object.keys(distinct).length
+      };
+    }
+    function drawOnce() { requestAnimationFrame(draw); }
+
+    let raf = null, inView = true;
+    const loop = (now) => { draw(now); raf = requestAnimationFrame(loop); };
+    const play = () => { if (!raf && !reduced) raf = requestAnimationFrame(loop); };
+    const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = null; } };
 
     if (reduced) {
-      render(performance.now());               // one static frame
+      drawOnce();
     } else {
       new IntersectionObserver((entries) => {
         inView = entries[0].isIntersecting;
@@ -242,20 +403,18 @@
       play();
     }
 
-    /* recolor with the theme engine (matches its ~0.9s cross-fade) */
-    new MutationObserver(() => {
-      tgt = THEMES[themeName()];
-      if (reduced) {
-        // short manual tween so reduced-motion still transitions smoothly
-        let i = 0;
-        const step = () => {
-          lerp3(cur.A, tgt.A, 0.15); lerp3(cur.B, tgt.B, 0.15); lerp3(cur.C, tgt.C, 0.15);
-          render(performance.now());
-          if (i++ < 40) requestAnimationFrame(step);
-        };
-        step();
-      }
-    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    window.__VBF_LOGOFX = {
+      canvas,
+      probe() {
+        return new Promise(resolve => {
+          pendingProbe = resolve;
+          if (reduced) drawOnce();
+        });
+      },
+      trace(x, y) { trail[0] = x; trail[1] = y; trail[2] = 1; },
+      readouts: () => [...container.querySelectorAll(".logo-fx__num")]
+        .map(el => el.textContent)
+    };
   }
 
   function fallback(container) {
@@ -266,7 +425,6 @@
     container.appendChild(img);
   }
 
-  /* load once, mount everywhere */
   const img = new Image();
   img.crossOrigin = "anonymous";
   img.onload = () => {

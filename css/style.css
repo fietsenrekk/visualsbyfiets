@@ -844,3 +844,31 @@ body.vbf-cursor-on .vbf-cursor-ring { opacity: 1; }
   .footer__signature { padding-top: clamp(16px, 6vw, 32px); }
   .logo-fx { width: min(420px, 86vw); }
 }
+/* ---------- footer signature: telemetry readouts ---------- */
+.logo-fx { position: relative; }
+.logo-fx__readouts {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.logo-fx__num {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: clamp(7px, 0.85vw, 11px);
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  opacity: 0.55;
+  white-space: nowrap;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+  transition: opacity 0.25s linear;
+}
+.logo-fx__num.is-boxed {
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 1px 3px;
+  text-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-fx__num { transition: none; }
+}
