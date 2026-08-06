@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
   <div class="noise"></div>
@@ -241,9 +241,11 @@
 
   <!-- FOOTER -->
   <footer class="footer">
+    <div class="footer__signature">
+      <div class="logo-fx" data-logo-fx></div>
+    </div>
     <div class="footer__top">
       <div class="footer__logo">
-        <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
         <p class="footer__tag">VFX artist & video editor. Edits, 3D logo animation and motion design that convert attention into fans.</p>
       </div>
       <div class="footer__cols">
@@ -286,6 +288,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="js/data.js?v=2"></script>
   <script src="js/store.js?v=3"></script>
+  <script src="js/logo-fx.js?v=1"></script>
   <script src="js/main.js?v=5"></script>
   <script>
     mountWorkGrid("#featured-grid", WORK.filter(w => w.featured));

@@ -819,3 +819,28 @@ body.vbf-cursor-on .vbf-cursor-ring { opacity: 1; }
   .hero__scroll i { animation: none; }
   .marquee__track { animation: none !important; }
 }
+/* ============================================================
+   FOOTER SIGNATURE — the interactive liquid-metal logo crown
+   ============================================================ */
+.footer__signature {
+  display: flex;
+  justify-content: center;
+  padding: clamp(24px, 5vw, 64px) 0 clamp(28px, 5vw, 60px);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: clamp(40px, 5vw, 56px);
+}
+.logo-fx {
+  position: relative;
+  width: min(560px, 82vw);
+  line-height: 0;
+}
+.logo-fx canvas,
+.logo-fx img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 640px) {
+  .footer__signature { padding-top: clamp(16px, 6vw, 32px); }
+  .logo-fx { width: min(420px, 86vw); }
+}

@@ -1,5 +1,35 @@
 # Progress log
 
+## 2026-07-18 (2) — footer signature (liquid-metal logo)
+
+User supplied a Webflow embed for a Unicorn Studio scene
+(`data-us-project="61w8ZtzLS8iS8YyHdBkN"`) and asked for that effect on
+the main logo "in the same colorway as the site". A hosted Unicorn scene
+carries colors baked into the remote project and can't be recolored or
+theme-linked from our side — so the effect was rebuilt natively instead:
+
+- `js/logo-fx.js` — self-contained WebGL component on `[data-logo-fx]`.
+  The transparent mark (`logo-white.png`) is sampled as an alpha mask;
+  fbm flow warps the sample coords (liquid motion), a soft RGB split adds
+  liquid-glass refraction, and the fill is a 3-stop gradient in the site
+  palette (bronze → beige #e6d5bb → cream; violet theme: indigo →
+  lavender #b9a6ff → lilac). Cursor proximity swells the warp and adds a
+  highlight bloom.
+- Theme-aware: a MutationObserver on `data-theme` retargets the color
+  stops, which lerp over ~0.9s to match the theme engine's cross-fade.
+- Robust: the logo's tight bounding box is measured on load (no dead
+  margin, sets the container aspect-ratio), rAF pauses off-screen and on
+  hidden tabs, DPR capped at 2, static single frame under reduced motion,
+  `<img>` fallback when WebGL or the texture fails.
+- Footer: new `.footer__signature` crown above `.footer__top` on index /
+  shop / contact / thanks; the now-redundant small footer logo `<img>`
+  was removed. CSS bumped to v5.
+- Verified: renders (screenshot — mark reads as flowing liquid metal in
+  the cream colorway), aspect 1.6233 measured from the artwork, WebGL
+  context live, theme switch keeps the canvas alive, no console errors.
+  Post-screenshot tweak: chromatic split reduced 0.004→0.0022 and glint
+  0.6→0.32 so the sheen stays inside the brand palette.
+
 ## 2026-07-18 — repricing + monthly partnerships
 
 - One-off reprice everywhere (cards, buy buttons, hero copy, footers,
