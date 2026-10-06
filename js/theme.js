@@ -1,8 +1,8 @@
 /* ============================================================
    VBF THEME ENGINE
    Two identities, one system:
-     gold   — the existing brand: black canvas, beige #e6d5bb
-     violet — deep black, luxurious purple, lavender accent
+     gold: the existing brand: black canvas, beige #e6d5bb
+     violet: deep black, luxurious purple, lavender accent
    data-theme lives on <html> (set pre-paint by the inline boot
    script in each page's <head>). Switching:
      • adds html.theming so every color property cross-fades
@@ -68,6 +68,8 @@
     });
     return btn;
   }
+
+  window.addEventListener("vbfluid:ready", () => VBFluid.setPalette(FLUID_PALETTES[current()]));
 
   function mount() {
     // risk pages: append to the centered nav; classic pages: into the nav bar

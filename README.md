@@ -40,8 +40,13 @@ Contact email across the site: `charlesmuwangam@gmail.com`.
 
 ## Assets pipeline
 
-- `encode.ps1` — re-encodes source edits from the SAINTSTANCE folders into compact web previews (720p, 30s cap, H.264 + faststart) and extracts poster frames. Run again any time; it skips files that already exist.
-- `assets/img/logo-white.png` — transparent version of the logo (black background removed via ffmpeg alpha-from-luminance). Used by the nav, footer, preloader and the Three.js chrome hero.
+- `encode.ps1`: catalogue of id -> source file in the SAINTSTANCE tiktoks folder. Writes
+  `assets/video/full` (player, capped 2.4 Mbps), `assets/video/preview` (6s loop),
+  `assets/img/posters/*.webp` and `assets/video/manifest.json`. Skips existing files.
+- To add an edit: add a line to the catalogue in encode.ps1, run it, then add the
+  piece (artist, title, views, home) to js/data.js with w/h from manifest.json.
+- `assets/img/logo.webp` / `logo-nav.webp`: cropped, sized logo. `logo-white.png` is the
+  1024px source (also the JSON-LD logo).
 
 ## Deploy to visualsbyfiets.com
 

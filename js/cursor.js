@@ -1,5 +1,5 @@
 /* ============================================================
-   VBF CURSOR — one refined cursor for every page.
+   VBF CURSOR: one refined cursor for every page.
    A small dot + a trailing ring. The ring grows and labels
    itself by context:
      links/buttons → grows          [data-cursor] wins if set
@@ -53,7 +53,7 @@
     const tagged = el.closest("[data-cursor]");
     if (tagged) return tagged.getAttribute("data-cursor");
     if (el.closest(".r-close, .lightbox__close")) return "close";
-    if (el.closest(".r-worklink, .work-card")) return "play";
+    if (el.closest(".r-worklink, .tile")) return "play";
     if (el.closest(".r-worklist")) return "drag";
     if (el.closest("a, button, [role='button'], input, select, textarea, .faq__q")) return "hover";
     return "";
@@ -66,7 +66,7 @@
   document.addEventListener("pointerdown", () => ring.classList.add("is-down"));
   document.addEventListener("pointerup", () => ring.classList.remove("is-down"));
 
-  /* magnetic nav links — a quiet pull, never a jump */
+  /* magnetic nav links: a quiet pull, never a jump */
   const magnets = document.querySelectorAll(".r-nav a, .nav__links a, .theme-toggle");
   magnets.forEach(el => {
     el.addEventListener("pointermove", (e) => {

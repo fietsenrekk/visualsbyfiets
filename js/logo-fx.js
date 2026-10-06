@@ -1,5 +1,5 @@
 /* ============================================================
-   VBF LOGO FX — footer "signature scan".
+   VBF LOGO FX: footer "signature scan".
    The Visuals by Fiets mark processed like a live telemetry
    feed: ordered-dither pixel matrix, sweeping scanlines,
    glitch-displaced blocks, chromatic split, drifting blocks in
@@ -17,7 +17,7 @@
   if (!containers.length) return;
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const LOGO_SRC = "assets/img/logo-white.png";
+  const LOGO_SRC = "assets/img/logo.webp";
   const TRAIL = 8;
 
   /* theme → [deep, base, highlight] 0..1 rgb */
@@ -62,7 +62,7 @@
     }
     float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<3;i++){ v+=a*noise(p); p=p*2.03+vec2(11.0,7.0); a*=0.5;} return v; }
 
-    /* ordered dither (analytic Bayer) — the pixel-matrix look */
+    /* ordered dither (analytic Bayer): the pixel-matrix look */
     float bayer2(vec2 a){ a = floor(a); return fract(a.x/2.0 + a.y*a.y*0.75); }
     float bayer8(vec2 a){
       return bayer2(0.25*a)*0.0625 + bayer2(0.5*a)*0.25 + bayer2(a);
@@ -168,11 +168,13 @@
 
   /* ---------- tight bounding box of the mark ---------- */
   function measureLogo(img) {
+    // a 256px copy is plenty to find the mark's edges (16x fewer pixels than 1024)
+    const k = Math.min(1, 256 / Math.max(img.naturalWidth, img.naturalHeight));
     const c = document.createElement("canvas");
-    const w = c.width = img.naturalWidth;
-    const h = c.height = img.naturalHeight;
-    const ctx = c.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+    const w = c.width = Math.round(img.naturalWidth * k);
+    const h = c.height = Math.round(img.naturalHeight * k);
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, w, h);
     let minX = w, minY = h, maxX = 0, maxY = 0, found = false;
     try {
       const data = ctx.getImageData(0, 0, w, h).data;
@@ -432,5 +434,9 @@
     containers.forEach(c => initOne(c, img, box));
   };
   img.onerror = () => containers.forEach(fallback);
-  img.src = LOGO_SRC;
+  /* the signature lives in the footer: start it only when it is close */
+  const near = new IntersectionObserver((entries) => {
+    if (entries.some(e => e.isIntersecting)) { near.disconnect(); img.src = LOGO_SRC; }
+  }, { rootMargin: "900px 0px" });
+  containers.forEach(c => near.observe(c));
 })();

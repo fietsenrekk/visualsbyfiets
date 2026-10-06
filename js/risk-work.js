@@ -1,5 +1,5 @@
 /* ============================================================
-   WORK — infinite horizontal carousel, physics matched 1:1 to
+   WORK: infinite horizontal carousel, physics matched 1:1 to
    risk.film/works (extracted from their production bundle):
 
      lspeed  = damp(lspeed, speed, 5, dt)      smoothed velocity
@@ -23,17 +23,16 @@
 
   /* ---------- build items ---------- */
   const items = WORK.map((w) => {
-    const parts = w.title.split("—").map(s => s.trim());
-    const client = parts.length > 1 ? parts[0] : "VISUALS BY FIETS";
-    const piece = parts.length > 1 ? parts.slice(1).join(" — ") : parts[0];
+    const client = w.artist || "Visuals by Fiets";
+    const piece = w.title;
     const item = document.createElement("div");
     item.className = "r-workitem";
     item.innerHTML = `
       <div class="r-worklink" data-id="${w.id}" role="button" tabindex="0"
-           aria-label="Play ${client} — ${piece}">
+           aria-label="Play ${client}, ${piece}">
         <div class="r-workvideo-w">
-          <img class="r-workvideo" src="assets/img/posters/${w.id}.jpg" alt="${piece}">
-          <video class="r-workvideo" data-src="assets/video/work/${w.id}.mp4"
+          <img class="r-workvideo" src="assets/img/posters/${w.id}.webp" alt="${client}, ${piece}" width="${w.w}" height="${w.h}" decoding="async">
+          <video class="r-workvideo" data-src="assets/video/preview/${w.id}.mp4"
                  muted loop playsinline preload="none"></video>
         </div>
         <div class="r-workinfo">
@@ -174,9 +173,14 @@
       const nearest = Math.round(state.target / state.itemW) * state.itemW;
       state.target += (nearest - state.target) * snapStrength;
     }
-    layout();
+    /* skip the 60-card transform pass once everything is at rest */
+    const settled = Math.abs(state.current - state.target) < 0.05 &&
+      Math.abs(state.lspeed) < 0.0002 && introState.p >= 1 && !state.dragging;
+    const sig = state.locked + "|" + detailOpen + "|" + state.vw + "|" + state.itemW;
+    if (!settled || sig !== lastSig) { layout(); lastSig = sig; }
     requestAnimationFrame(raf);
   }
+  let lastSig = "";
   requestAnimationFrame(raf);
 
   /* ---------- intro ---------- */
@@ -215,8 +219,8 @@
     lastTrigger = triggerEl || document.activeElement;
     dClient.textContent = it.client;
     dPiece.textContent = it.piece;
-    detail.setAttribute("aria-label", `${it.client} — ${it.piece}`);
-    dVideo.src = `assets/video/work/${id}.mp4`;
+    detail.setAttribute("aria-label", `${it.client}, ${it.piece}`);
+    dVideo.src = `assets/video/full/${id}.mp4`;
     dVideo.muted = false;
     dVideo.volume = 1;
     dVideo.currentTime = 0;

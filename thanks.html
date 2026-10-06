@@ -4,21 +4,24 @@
   <meta charset="UTF-8">
   <script>(function(){try{var t=localStorage.getItem("vbf-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order received — Visuals by Fiets | Send your brief</title>
-  <meta name="description" content="Payment received. Send your footage, song and references to lock in your slot.">
+  <title>Order received | Visuals by Fiets</title>
+  <meta name="description" content="Payment received. Send your footage, song and references to start your edit.">
   <meta name="robots" content="noindex">
-  <link rel="icon" type="image/png" href="assets/img/logo-white.png">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
   <div class="noise"></div>
 
   <header class="nav">
-    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets — home">
-      <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets, home">
+      <img src="assets/img/logo-nav.webp" alt="Visuals by Fiets" width="240" height="145">
     </a>
     <ul class="nav__links">
       <li><a href="work.html">Work</a></li>
@@ -35,13 +38,13 @@
       <span class="line"><span class="accent">Locked</span></span>
       <span class="line"><span>In.</span></span>
     </h1>
-    <p class="page-hero__sub">Payment received — your slot is reserved. One last step: send your brief so I can start cutting.</p>
+    <p class="page-hero__sub">Payment received, your slot is reserved. One last step: send your brief so I can start cutting.</p>
   </section>
 
   <section class="section section--tight">
     <div class="section__head">
       <div>
-        <span class="section__num">Next step — the brief</span>
+        <span class="section__num">Next step: the brief</span>
         <h2 class="section__title reveal">Send me <span class="outline">this</span></h2>
       </div>
     </div>
@@ -59,7 +62,7 @@
       <div class="step">
         <span class="step__num">/03</span>
         <h3 class="step__title">References</h3>
-        <p>1–3 edits you like — mine or anyone's. The vibe, the pacing, anything that says "like this".</p>
+        <p>1 to 3 edits you like, mine or anyone's. The vibe, the pacing, anything that says "like this".</p>
       </div>
       <div class="step">
         <span class="step__num">/04</span>
@@ -81,19 +84,20 @@
       <div class="logo-fx" data-logo-fx></div>
     </div>
     <div class="footer__bottom" style="border-top:none;">
-      <span>© <span data-year></span> Visuals by Fiets — visualsbyfiets.com</span>
+      <span>© <span data-year></span> Visuals by Fiets · visualsbyfiets.com</span>
       <span>Secure checkout by Stripe</span>
     </div>
   </footer>
 
-  <script src="js/fluid.js?v=1"></script>
-  <script src="js/theme.js?v=1"></script>
+  <script src="js/fluid.js?v=4"></script>
+  <script src="js/theme.js?v=2"></script>
   <script src="js/cursor.js?v=1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="js/data.js?v=2"></script>
-  <script src="js/store.js?v=3"></script>
-  <script src="js/logo-fx.js?v=3"></script>
-  <script src="js/main.js?v=5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+  <script src="js/data.js?v=3"></script>
+  <script src="js/store.js?v=4"></script>
+  <script src="js/logo-fx.js?v=5"></script>
+  <script src="js/main.js?v=7"></script>
 </body>
 </html>

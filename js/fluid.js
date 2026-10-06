@@ -1,5 +1,5 @@
 /* ============================================================
-   VBF FLUID — real Navier-Stokes fluid simulation.
+   VBF FLUID: real Navier-Stokes fluid simulation.
    Based on Pavel Dobryakov's WebGL-Fluid-Simulation (MIT),
    as adapted by Thomas Kabalin (WebGL-Fluid-Background).
    Reworked for visualsbyfiets:
@@ -10,13 +10,28 @@
      • dynamic quality governor (halves dye res under 45fps)
      • public API: window.VBFluid { splat, burst, setPalette,
        calm, pause, resume }
-   MIT License — original notice retained in repository history.
+   MIT License: original notice retained in repository history.
    ============================================================ */
 
 (function () {
   "use strict";
 
+  /* Boot after the page is painted and idle: compiling ~15 shaders and
+     allocating the sim framebuffers is a long main-thread task, and the
+     dye is invisible for the first moments anyway. */
+  const start = () => ("requestIdleCallback" in window)
+    ? requestIdleCallback(boot, { timeout: 1500 })
+    : setTimeout(boot, 300);
+  if (document.readyState === "complete") start();
+  else window.addEventListener("load", start, { once: true });
+
+  function boot() {
+
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* idle tracking: any splat or resize wakes the sim (see update) */
+  let lastActivity = performance.now();
+  function markActive() { lastActivity = performance.now(); }
 
   const canvas = document.createElement("canvas");
   canvas.className = "fluid-bg";
@@ -59,7 +74,8 @@
   }
 
   function scaleByPixelRatio(input) {
-    return Math.floor(input * Math.min(window.devicePixelRatio || 1, 2));
+    /* the dye is a soft gradient: 1x pixels look identical and cost 2-4x less */
+    return Math.floor(input * Math.min(window.devicePixelRatio || 1, 1));
   }
   function resizeCanvas() {
     const w = scaleByPixelRatio(canvas.clientWidth);
@@ -685,6 +701,7 @@
     return radius;
   }
   function splat(x, y, dx, dy, color) {
+    markActive();
     splatProgram.bind();
     gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
     gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
@@ -746,14 +763,14 @@
     lastScrollY = window.scrollY;
   }, { passive: true });
   window.addEventListener("wheel", (e) => {
-    // fixed pages don't scroll — feed wheel velocity directly
+    // fixed pages don't scroll: feed wheel velocity directly
     if (document.body.classList.contains("risk-page")) scrollAccum += e.deltaY * 0.6;
   }, { passive: true });
 
   /* hover splats on interactive elements */
   document.addEventListener("pointerover", (e) => {
     if (reduced) return;
-    const t = e.target.closest("a, button, .work-card, .r-worklink");
+    const t = e.target.closest("a, button, .tile, .r-worklink");
     if (!t) return;
     splat(pointer.x, pointer.y, (Math.random() - 0.5) * 220, (Math.random() - 0.5) * 220, paletteColor(0.35));
   });
@@ -780,17 +797,27 @@
   let fpsSamples = [];
   let governed = false;
 
+  let rawDt = 0;
+  const coarse = matchMedia("(pointer: coarse)").matches;
+  let frameNo = 0;
   function calcDeltaTime() {
     const now = Date.now();
-    let dt = (now - lastUpdateTime) / 1000;
-    dt = Math.min(dt, 0.016666);
+    rawDt = (now - lastUpdateTime) / 1000;
     lastUpdateTime = now;
-    return dt;
+    return Math.min(rawDt, coarse ? 0.0333 : 0.016666);
   }
 
   function update() {
+    if (coarse && (frameNo++ & 1)) { raf = requestAnimationFrame(update); return; }
     const dt = calcDeltaTime();
-    if (resizeCanvas()) initFramebuffers();
+    if (resizeCanvas()) { initFramebuffers(); markActive(); }
+
+    /* idle sleep: dye fully dissipates ~5s after the last input, after which
+       every frame would redraw the same black. Skip the sim until something moves. */
+    if (performance.now() - lastActivity > 6000 && !pointer.moved && Math.abs(scrollAccum) <= 40) {
+      raf = requestAnimationFrame(update);
+      return;
+    }
 
     /* slowly rotate the pointer's dye color through the palette */
     colorTimer += dt * 0.6;
@@ -816,7 +843,7 @@
 
     /* quality governor: if fps sags, drop dye res + bloom once */
     if (!governed) {
-      fpsSamples.push(dt);
+      fpsSamples.push(rawDt);   // measure the real frame time, not the clamped step
       if (fpsSamples.length === 120) {
         const avg = fpsSamples.reduce((a, b) => a + b, 0) / fpsSamples.length;
         if (avg > 1 / 45 && config.DYE_RESOLUTION > 512) {
@@ -849,4 +876,7 @@
     },
     get reduced() { return reduced; }
   };
+  requestAnimationFrame(() => canvas.classList.add("is-on"));
+  window.dispatchEvent(new Event("vbfluid:ready"));
+  }
 })();

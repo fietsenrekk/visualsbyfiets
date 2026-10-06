@@ -1,5 +1,5 @@
 /* ============================================================
-   ABOUT — infinite vertical manifesto track (risk.film mechanic)
+   ABOUT: infinite vertical manifesto track (risk.film mechanic)
    Two copies of the manifesto spaced far apart; wheel / touch
    feeds a lerped target and the track wraps seamlessly.
    ============================================================ */

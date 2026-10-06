@@ -4,21 +4,33 @@
   <meta charset="UTF-8">
   <script>(function(){try{var t=localStorage.getItem("vbf-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}})()</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop — Visuals by Fiets | Edits from €150, 3D Logos, Project Files</title>
-  <meta name="description" content="Book a video edit, order a 3D logo animation, or grab project files and presets. Flat pricing, secure Stripe checkout.">
-  <link rel="icon" type="image/png" href="assets/img/logo-white.png">
+  <title>Shop | Visuals by Fiets, edits from €150, 3D logos, monthly partnerships</title>
+  <meta name="description" content="Book a music edit, a 3D logo animation or a monthly content partnership. Flat pricing, secure Stripe checkout, 48h first cuts.">
+  <link rel="canonical" href="https://fietsenrekk.github.io/visualsbyfiets/shop.html">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Visuals by Fiets">
+  <meta property="og:title" content="Shop | Visuals by Fiets, edits from €150, 3D logos, monthly partnerships">
+  <meta property="og:description" content="Book a music edit, a 3D logo animation or a monthly content partnership. Flat pricing, secure Stripe checkout, 48h first cuts.">
+  <meta property="og:url" content="https://fietsenrekk.github.io/visualsbyfiets/shop.html">
+  <meta property="og:image" content="https://fietsenrekk.github.io/visualsbyfiets/assets/img/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
   <div class="noise"></div>
   
 
   <header class="nav">
-    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets — home">
-      <img src="assets/img/logo-white.png" alt="Visuals by Fiets">
+    <a class="nav__logo" href="index.html" aria-label="Visuals by Fiets, home">
+      <img src="assets/img/logo-nav.webp" alt="Visuals by Fiets" width="240" height="145">
     </a>
     <ul class="nav__links">
       <li><a href="work.html">Work</a></li>
@@ -35,17 +47,17 @@
       <span class="line"><span>Shop</span></span>
       <span class="line"><span class="accent">& Book</span></span>
     </h1>
-    <p class="page-hero__sub">Flat pricing. Secure Stripe checkout — card, iDEAL, Apple Pay, Google Pay. Your slot locks the moment you pay; brief me right after via DM or email.</p>
+    <p class="page-hero__sub">Flat pricing. Secure Stripe checkout: card, iDEAL, Apple Pay, Google Pay. Your slot locks the moment you pay, then you brief me by DM or email.</p>
   </section>
 
   <!-- MONTHLY PARTNERSHIPS -->
   <section class="section section--tight" id="partnerships">
     <div class="section__head">
       <div>
-        <span class="section__num">01 — Monthly partnerships</span>
+        <span class="section__num">01 / Monthly partnerships</span>
         <h2 class="section__title reveal">Own the <span class="accent">month</span></h2>
       </div>
-      <p class="section__lede reveal">For accounts and brands that need consistent, converting content every month — fast, zero friction, guaranteed 48-hour first cuts.</p>
+      <p class="section__lede reveal">For accounts and brands that need consistent, converting content every month. Fast, zero friction, guaranteed 48-hour first cuts.</p>
     </div>
     <div class="price-grid">
       <div class="price-card reveal">
@@ -91,7 +103,7 @@
   <section class="section section--tight" id="services">
     <div class="section__head">
       <div>
-        <span class="section__num">02 — Services</span>
+        <span class="section__num">02 / Services</span>
         <h2 class="section__title reveal">Commissions</h2>
       </div>
       <p class="section__lede reveal">Every order includes platform-ready exports (TikTok / Reels / Shorts) and a licensed final master.</p>
@@ -108,7 +120,7 @@
           <li>Delivered in 3–5 days</li>
         </ul>
         <!-- TODO: replace with new Stripe payment link for €150 (js/store.js -> standard-edit) -->
-        <button class="btn" data-buy="standard-edit">Buy — €150</button>
+        <button class="btn" data-buy="standard-edit">Buy · €150</button>
       </div>
       <div class="price-card price-card--featured reveal" id="signature">
         <span class="price-card__flag">Best value</span>
@@ -123,7 +135,7 @@
           <li>Raw + platform exports included</li>
         </ul>
         <!-- TODO: replace with new Stripe payment link for €250 (js/store.js -> signature-edit) -->
-        <button class="btn btn--solid" data-buy="signature-edit">Buy — €250</button>
+        <button class="btn btn--solid" data-buy="signature-edit">Buy · €250</button>
       </div>
       <div class="price-card reveal" id="logo-3d">
         <span class="price-card__type">3D motion</span>
@@ -136,7 +148,7 @@
           <li>4K render, transparent alpha on request</li>
         </ul>
         <!-- TODO: replace with new Stripe payment link for €499 (js/store.js -> logo-3d) -->
-        <button class="btn" data-buy="logo-3d">Buy — €499</button>
+        <button class="btn" data-buy="logo-3d">Buy · €499</button>
       </div>
       <div class="price-card reveal" id="bundle">
         <span class="price-card__type">Everything, together</span>
@@ -149,7 +161,7 @@
           <li>Top-priority queue position</li>
         </ul>
         <!-- TODO: replace with new Stripe payment link for €649 (js/store.js -> brand-bundle) -->
-        <button class="btn btn--solid" data-buy="brand-bundle">Buy — €649</button>
+        <button class="btn btn--solid" data-buy="brand-bundle">Buy · €649</button>
       </div>
     </div>
   </section>
@@ -158,7 +170,7 @@
   <section class="section section--tight" id="files">
     <div class="section__head">
       <div>
-        <span class="section__num">03 — Digital products</span>
+        <span class="section__num">03 / Digital products</span>
         <h2 class="section__title reveal">Own the <span class="outline">pipeline</span></h2>
       </div>
       <p class="section__lede reveal">Instant-delivery downloads. Learn exactly how the edits are built, or drop my presets straight into your own timeline.</p>
@@ -174,7 +186,7 @@
           <li>Effect stack breakdown included</li>
           <li>Personal-use license</li>
         </ul>
-        <button class="btn" data-buy="project-files">Buy — €49</button>
+        <button class="btn" data-buy="project-files">Buy · €49</button>
       </div>
       <div class="price-card reveal">
         <span class="price-card__type">Plug & play</span>
@@ -186,7 +198,7 @@
           <li>Premiere Pro compatible</li>
           <li>Free updates, forever</li>
         </ul>
-        <button class="btn" data-buy="preset-pack">Buy — €29</button>
+        <button class="btn" data-buy="preset-pack">Buy · €29</button>
       </div>
     </div>
   </section>
@@ -213,14 +225,14 @@
   <section class="section">
     <div class="section__head">
       <div>
-        <span class="section__num">04 — FAQ</span>
+        <span class="section__num">04 / FAQ</span>
         <h2 class="section__title reveal">Good to know</h2>
       </div>
     </div>
     <div class="faq">
       <div class="faq__item">
         <button class="faq__q">How does ordering work?</button>
-        <div class="faq__a"><p>Pick a package and pay via Stripe — that locks your slot. Right after checkout, send your footage, song and references via Instagram DM or email. You'll get a first cut within ~48 hours for commissions.</p></div>
+        <div class="faq__a"><p>Pick a package and pay via Stripe. That locks your slot. Right after checkout, send your footage, song and references via Instagram DM or email. You'll get a first cut within ~48 hours for commissions.</p></div>
       </div>
       <div class="faq__item">
         <button class="faq__q">What do I need to send you?</button>
@@ -232,23 +244,23 @@
       </div>
       <div class="faq__item">
         <button class="faq__q">What formats do I receive?</button>
-        <div class="faq__a"><p>A 4K (or source-res) master plus 9:16, 1:1 and 16:9 platform exports as needed — H.264 MP4, ProRes on request. 3D logos can include a transparent-alpha version for overlays.</p></div>
+        <div class="faq__a"><p>A 4K (or source-res) master plus 9:16, 1:1 and 16:9 platform exports as needed. H.264 MP4, ProRes on request. 3D logos can include a transparent-alpha version for overlays.</p></div>
       </div>
       <div class="faq__item">
         <button class="faq__q">Can I use the edit commercially?</button>
-        <div class="faq__a"><p>Yes — finals come with full usage rights for your channels and campaigns. Project files and preset packs are licensed for personal use and can't be resold or redistributed.</p></div>
+        <div class="faq__a"><p>Yes. Finals come with full usage rights for your channels and campaigns. Project files and preset packs are licensed for personal use and can't be resold or redistributed.</p></div>
       </div>
       <div class="faq__item">
         <button class="faq__q">What if I'm not happy?</button>
-        <div class="faq__a"><p>Tell me. Revisions exist exactly for this, and I don't consider a piece finished until it hits. If a commission can't be started (queue full, footage unusable), you get a full refund — no questions.</p></div>
+        <div class="faq__a"><p>Tell me. Revisions exist exactly for this, and I don't consider a piece finished until it hits. If a commission can't be started (queue full, footage unusable), you get a full refund, no questions.</p></div>
       </div>
       <div class="faq__item">
         <button class="faq__q">How do monthly partnerships work?</button>
-        <div class="faq__a"><p>You apply or book a call, we scope the month together, and you get a fixed monthly slot. Slots are limited so every partner keeps the 48-hour SLA. Partnerships roll monthly — cancel any time with 30 days notice.</p></div>
+        <div class="faq__a"><p>You apply or book a call, we scope the month together, and you get a fixed monthly slot. Slots are limited so every partner keeps the 48-hour SLA. Partnerships roll monthly: cancel any time with 30 days notice.</p></div>
       </div>
       <div class="faq__item">
         <button class="faq__q">Why don't partnerships have a buy button?</button>
-        <div class="faq__a"><p>Because they're scoped to your brand first. On a short call we lock volume, formats and priorities — then you get a tailored agreement instead of a generic checkout. That's how the retainer stays worth more than it costs.</p></div>
+        <div class="faq__a"><p>Because they're scoped to your brand first. On a short call we lock volume, formats and priorities, then you get a tailored agreement instead of a generic checkout. That's how the retainer stays worth more than it costs.</p></div>
       </div>
     </div>
   </section>
@@ -258,7 +270,7 @@
     <h2 class="cta__title reveal">Lock your <span class="outline">slot</span></h2>
     <p class="reveal">Limited commissions per month. When the queue is full, it's full.</p>
     <div class="reveal" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a class="btn btn--solid btn--lg" href="#signature">Signature Edit — €250</a>
+      <a class="btn btn--solid btn--lg" href="#signature">Signature Edit · €250</a>
       <a class="btn btn--lg" href="contact.html">Ask a question</a>
     </div>
   </section>
@@ -273,7 +285,7 @@
       </div>
       <div class="footer__cols">
         <div class="footer__col">
-          <h4>Site</h4>
+          <h2 class="footer__h">Site</h2>
           <ul>
             <li><a href="work.html">Work</a></li>
             <li><a href="shop.html">Shop</a></li>
@@ -282,36 +294,37 @@
           </ul>
         </div>
         <div class="footer__col">
-          <h4>Social</h4>
+          <h2 class="footer__h">Social</h2>
           <ul>
             <li><a href="https://www.tiktok.com/@visualsbyfiets" target="_blank" rel="noopener">TikTok</a></li>
             <li><a href="https://www.instagram.com/visualsbyfiets" target="_blank" rel="noopener">Instagram</a></li>
           </ul>
         </div>
         <div class="footer__col">
-          <h4>Order</h4>
+          <h2 class="footer__h">Order</h2>
           <ul>
-            <li><a href="#signature">Signature Edit — €250</a></li>
-            <li><a href="#logo-3d">3D Logo — €499</a></li>
-            <li><a href="#files">Project Files — €49</a></li>
+            <li><a href="#signature">Signature Edit · €250</a></li>
+            <li><a href="#logo-3d">3D Logo · €499</a></li>
+            <li><a href="#files">Project Files · €49</a></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© <span data-year></span> Visuals by Fiets — visualsbyfiets.com</span>
+      <span>© <span data-year></span> Visuals by Fiets · visualsbyfiets.com</span>
       <span>Secure checkout by Stripe</span>
     </div>
   </footer>
 
-  <script src="js/fluid.js?v=1"></script>
-  <script src="js/theme.js?v=1"></script>
+  <script src="js/fluid.js?v=4"></script>
+  <script src="js/theme.js?v=2"></script>
   <script src="js/cursor.js?v=1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="js/data.js?v=2"></script>
-  <script src="js/store.js?v=3"></script>
-  <script src="js/logo-fx.js?v=3"></script>
-  <script src="js/main.js?v=5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+  <script src="js/data.js?v=3"></script>
+  <script src="js/store.js?v=4"></script>
+  <script src="js/logo-fx.js?v=5"></script>
+  <script src="js/main.js?v=7"></script>
 </body>
 </html>

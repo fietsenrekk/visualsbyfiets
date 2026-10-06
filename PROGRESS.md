@@ -1,5 +1,31 @@
 # Progress log
 
+## 2026-10-06: new edits, scatter reel, performance, copy
+
+- 43 new pieces added (60 total). Titles and view counts come from the @visualsbyfiets
+  TikTok captions read on 2026-10-06. Excluded: the Will Smith / xQc meme post, a
+  WhatsApp food video, two 3-4s tests, two raw source clips, C2070 (Pinterest meme
+  skit), sniperr_1 (same Leon edit as Blush), MM6 SUPREME (earlier cut of MM6 2026).
+- New pipeline (encode.ps1): full player clip (<=1280, <=30s, capped 2.4 Mbps; the
+  sources were ~14 Mbps), 6s silent 480px preview loop, webp poster, manifest.json
+  with real sizes. js/data.js is generated from that manifest (artist/title/views/home).
+- Homepage: pinned horizontal scatter reel (js/home.js), jjettas.com-style: vertical
+  scroll drives a strip of near-touching tiles at staggered heights with parallax
+  depth, counter + progress line; masonry on mobile / reduced motion. Word-scrub
+  quote section. Shared player dialog in main.js. Lenis smooth scroll (mouse only).
+- Stats are now real: 230K+ views on edits (234.4K summed over 47 edit posts, meme
+  excluded), 58K+ likes, 58K on one edit. The old 10M+/150+/30+ were placeholders.
+- Perf (Lighthouse mobile, throttled): home 40 -> 78, LCP 6.7s -> 3.7s, TBT 1290 -> 240ms.
+  Fixes: fluid boots on idle (shader compile was a long task), 1x DPR, idle sleep,
+  governor bug (it measured the clamped dt so it could never fire), 30fps on touch;
+  logo-fx starts only near the footer and measures a 256px copy; fonts non-blocking;
+  sized webp logos (256KB png -> 13KB nav); no backdrop-filter over WebGL; grain layer
+  110% not 200%; works carousel skips its 60-card transform pass at rest.
+- a11y/SEO 100 on all pages: canonical, OG/Twitter, JSON-LD ProfessionalService,
+  sitemap.xml, robots.txt, og.jpg 1200x630, one h1 per page, heading order, 12px+ text.
+- Copy: no em dashes anywhere (pages, JS strings, comments), Belgium not NL,
+  loader coordinates moved to Antwerp.
+
 ## 2026-07-20 — footer signature: telemetry scan on the logo
 
 User asked for the Unicorn Studio scene effect on the main logo, in the

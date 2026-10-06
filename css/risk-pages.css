@@ -1,5 +1,5 @@
 /* ============================================================
-   RISK-style Work + About pages — visualsbyfiets
+   RISK-style Work + About pages: visualsbyfiets
    Scoped to body.risk-page. Black canvas, beige ink, Syncopate.
    Reference mechanics: fixed 100vh scenes, infinite lerped
    tracks, coordinate loader with ticks + giant counter.
@@ -190,9 +190,9 @@ body.risk-page ::selection { background: var(--r-beige); color: #000; }
   font-size: 8px;
 }
 .r-client {
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
-  font-size: 9px; font-weight: 700;
+  font-size: 12px; font-weight: 700;
   line-height: 1.5;
   white-space: nowrap;
 }
@@ -200,7 +200,7 @@ body.risk-page ::selection { background: var(--r-beige); color: #000; }
 /* ---------- WORK detail panel (same color panel) ---------- */
 .r-detail {
   position: fixed; inset: 0;
-  z-index: 98; /* ABOVE the nav (97) — the nav was swallowing close-button clicks */
+  z-index: 98; /* ABOVE the nav (97): the nav was swallowing close-button clicks */
   background: var(--r-black);
   color: var(--r-beige);
   display: flex; flex-flow: column;
