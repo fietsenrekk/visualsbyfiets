@@ -33,9 +33,7 @@ Contact email across the site: `charlesmuwangam@gmail.com`.
 
 - **Stats** on `index.html` / `about.html` (`data-count` values: edits delivered, views, clients) — set them to your real numbers.
 - **Pricing/inclusions** in `shop.html` + the homepage teaser.
-- **Portfolio**: edit `js/data.js` (`WORK` array). Add a new piece by dropping
-  `assets/video/work/<id>.mp4` + `assets/img/posters/<id>.jpg` and one line in the array.
-  Re-encode sources with `encode.ps1` (add a line to the `$work` list).
+- **Portfolio**: `js/data.js` (`WORK` array). See the assets pipeline below for adding a piece.
 - **Brand reel**: `BRAND_REEL` in `js/data.js` ↔ files in `assets/video/brands/`.
 
 ## Assets pipeline
